@@ -1,6 +1,6 @@
 ;;; packages.el --- ESS (R) Layer packages File for Spacemacs
 ;;
-;; Copyright (c) 2012-2016 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2017 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -11,17 +11,11 @@
 
 (setq ess-packages
   '(
-    ;; company
     ess
     ess-R-data-view
-    ;; ess-R-object-popup
     ess-smart-equals
-    rainbow-delimiters
-    (electric-spacing-r :location local)
-    (essh :location local)
-    smartparens
-    ;; :local electric-spacing-r
-    ))
+    golden-ratio
+    org))
 
 (defun ess/init-ess ()
   (use-package ess-site
@@ -56,49 +50,25 @@
     :commands (R stata julia SAS)
     :init
     (progn
+      (spacemacs/register-repl 'ess-site 'julia)
+      (spacemacs/register-repl 'ess-site 'R)
+      (spacemacs/register-repl 'ess-site 'SAS)
+      (spacemacs/register-repl 'ess-site 'stata)
+      ;; Explicitly run prog-mode hooks since ess-mode does not derive from
+      ;; prog-mode major-mode
+      (add-hook 'ess-mode-hook 'spacemacs/run-prog-mode-hooks)
       (when (configuration-layer/package-usedp 'company)
-        (add-hook 'ess-mode-hook 'company-mode)))
-    (use-package ess-r-mode
-      :bind
-      (:map ess-r-mode-map
-            ("M--" . ess-insert-assign)
-            ("M-p" . add-pipe))
-      (:map inferior-ess-r-mode-map
-            ("M--" . ess-insert-assign))
-      :config
-      (defun add-pipe ()
-        (interactive)
-        (end-of-line)
-        (unless (looking-back "%>%" nil)
-          (just-one-space 1)
-          (insert "%>%"))
-        (newline-and-indent))
-      ))
+          (add-hook 'ess-mode-hook 'company-mode))))
 
   ;; R --------------------------------------------------------------------------
-  (with-eval-after-load 'ess-site
-    ;; ESS
-    (add-hook 'ess-mode-hook
-              (lambda ()
-                (ess-set-style 'C++ 'quiet)
-                ;; Because
-                ;;                                 DEF GNU BSD K&R C++
-                ;; ess-indent-level                  2   2   8   5   4
-                ;; ess-continued-statement-offset    2   2   8   5   4
-                ;; ess-brace-offset                  0   0  -8  -5  -4
-                ;; ess-arg-function-offset           2   4   0   0   0
-                ;; ess-expression-offset             4   2   8   5   4
-                ;; ess-else-offset                   0   0   0   0   0
-                ;; ess-close-brace-offset            0   0   0   0   0
-                (add-hook 'local-write-file-hooks
-                          (lambda ()
-                            (ess-nuke-trailing-whitespace)))))
-    (setq ess-nuke-trailing-whitespace-p 'ask)
-    ;; or even
-    ;; (setq ess-nuke-trailing-whitespace-p t)
-    ;; Perl
-    (add-hook 'perl-mode-hook
-              (lambda () (setq perl-indent-level 4)))
+  (setq spacemacs/ess-config
+    '(progn
+    ;; Follow Hadley Wickham's R style guide
+    (setq ess-first-continued-statement-offset 2
+          ess-continued-statement-offset 0
+          ess-expression-offset 2
+          ess-nuke-trailing-whitespace-p t
+          ess-default-style 'DEFAULT)
 
     (defun spacemacs/ess-start-repl ()
       "Start a REPL corresponding to the ess-language of the current buffer."
@@ -108,9 +78,20 @@
        ((string= "STA" ess-language) (call-interactively 'stata))
        ((string= "SAS" ess-language) (call-interactively 'SAS))))
 
+    (spacemacs/declare-prefix-for-mode 'ess-r-mode "md" "package dev")
+    (spacemacs/declare-prefix-for-mode 'ess-r-mode "mh" "help")
+    (spacemacs/declare-prefix-for-mode 'ess-r-mode "mv" "view data")
+    (spacemacs/declare-prefix-for-mode 'ess-r-mode "ms" "session (REPL)")
+    (spacemacs/declare-prefix-for-mode 'ess-r-mode "mc" "chunks")
+    (spacemacs/declare-prefix-for-mode 'ess-r-mode "mg" "graphics")
+    (spacemacs/declare-prefix-for-mode 'ess-r-mode "mr" "rmarkdown")
+    (spacemacs/declare-prefix-for-mode 'ess-r-mode "mS" "shiny")
+
     (spacemacs/set-leader-keys-for-major-mode 'ess-julia-mode
+      "'"  'julia
       "si" 'julia)
-    (spacemacs/set-leader-keys-for-major-mode 'ess-mode
+    (spacemacs/set-leader-keys-for-major-mode 'ess-r-mode
+      "'"  'spacemacs/ess-start-repl
       "si" 'spacemacs/ess-start-repl
       ;; noweb
       "cC" 'ess-eval-chunk-and-go
@@ -122,82 +103,290 @@
       ;; REPL
       "sB" 'ess-eval-buffer-and-go
       "sb" 'ess-eval-buffer
-      "sD" 'ess-eval-function-or-paragraph-and-step
+      "e" 'ess-eval-paragraph-and-step
+      "f" 'ess-eval-function
+      "i" 'ess-interrupt
+      "o"  'ess-eval-word
+      "R" 'ess-eval-region
+      "sp" 'ess-eval-paragraph-and-step
       "sd" 'ess-eval-region-or-line-and-step
-      "sL" 'ess-eval-line-and-go
       "sl" 'ess-eval-line
-      "sR" 'ess-eval-region-and-go
       "sr" 'ess-eval-region
-      "sT" 'ess-eval-function-and-go
       "st" 'ess-eval-function
-      ;; R helpers
-      "hd" 'ess-R-dv-pprint
-      "hi" 'ess-R-object-popup
-      "ht" 'ess-R-dv-ctable
+      "sw" 'ess-set-working-directory
+      ;; R data viewers
+      "vs" 'df-sample-small
+      "vm" 'df-sample-medium
+      "vl" 'df-sample-large
+      ;; Package Dev helpers
+      "di" 'ess-r-devtools-install-package
+      "dt" 'ess-r-devtools-test-package
+      "dl" 'ess-r-devtools-load-package
+      "dc" 'ess-r-devtools-check-package
+      "dd" 'ess-r-devtools-document-package
+      "df" 'ess-roxy-update-entry
+      "ds" 'tide-devtools-setup
+      ;; R help
+      "ho" 'ess-display-help-on-object
+      "hi" 'ess-display-index
+      "ha" 'ess-display-help-apropos
+      ;; Graphics devices
+      "gn" 'tide-new-gdev
+      "gc" 'tide-cur-gdev
+      "gs" 'tide-switch-to-gdev
+      "gl" 'tide-list-all-gdev
+      "gp" 'tide-save-gdev-pdf
+      "gc" 'tide-capture-gdev
+      "gj" 'tide-switch-next-gdev
+      "gk" 'tide-switch-prev-gdev
+      ;; R Markdown
+      "rc" 'insert-chunk
+      "rr" 'tide-rmd-rend
+      "rd" 'tide-draft-rmd
+      ;; Shiny
+      "Sr" 'tide-shiny-run-app
       )
     (define-key ess-mode-map (kbd "<s-return>") 'ess-eval-line)
     (define-key inferior-ess-mode-map (kbd "C-j") 'comint-next-input)
-    (define-key inferior-ess-mode-map (kbd "C-k") 'comint-previous-input)))
+    (define-key inferior-ess-mode-map (kbd "C-k") 'comint-previous-input)
+    ;; Toggle underscore off no replacement of _ for <-
+    (setq ess-smart-S-assign-key nil)
+    ;; Stop R repl eval from blocking emacs.
+    (setq ess-eval-visibly 'nowait)
+    ;; Set fontification
+    (setq ess-R-font-lock-keywords
+      '((ess-R-fl-keyword:keywords   . t)
+        (ess-R-fl-keyword:constants  . t)
+        (ess-R-fl-keyword:modifiers  . t)
+        (ess-R-fl-keyword:fun-defs   . t)
+        (ess-R-fl-keyword:assign-ops . t)
+        (ess-R-fl-keyword:%op%       . t)
+        (ess-fl-keyword:fun-calls)
+        (ess-fl-keyword:numbers)
+        (ess-fl-keyword:operators . t)
+        (ess-fl-keyword:delimiters)
+        (ess-fl-keyword:=)
+        (ess-R-fl-keyword:F&T)))
+    ;; enable prettify symbols
+    (add-hook 'ess-mode-hook 'prettify-symbols-mode)
+
+    ;; =====================================================================
+    ;; Tidyverse IDE
+    ;; =====================================================================
+    (defun tide-insert-pipe ()
+      "Insert a %>% and newline"
+      (interactive)
+      (insert "%>%"))
+    (defun tide-insert-assign ()
+      "Insert an assignment <-"
+      (interactive)
+      (insert "<- "))
+    (define-key ess-mode-map (kbd "C-<") 'tide-insert-pipe)
+    (define-key ess-mode-map (kbd "C->") 'tide-insert-assign)
+
+    (defun tide-draft-rmd ()
+      "Draft a new Rmd file from a template interactively."
+      (interactive)
+      (setq rmd-file
+            (read-from-minibuffer "Rmd Filename (draft_<date>.Rmd): "
+                                  nil nil t t
+                                  (format "draft_%s.Rmd"
+                                          (string-trim
+                                           (shell-command-to-string "date --iso-8601")))))
+      (setq rmd-template
+            (read-from-minibuffer
+             (format "Draft %s from template (mmmisc/basic): " rmd-file)
+                                               nil nil t t "mmmisc/basic"))
+      (symbol-name rmd-template)
+      (string-match "\\([^/]+\\)/\\([^/]+\\)"
+                    (symbol-name rmd-template))
+      (setq template-pkg
+            (substring
+             (symbol-name rmd-template)
+             (match-beginning 1)
+             (match-end 1)))
+      (setq template-name
+            (substring
+             (symbol-name rmd-template)
+             (match-beginning 2)
+             (match-end 2)))
+      (message "Drafting using template %s from package %s" template-name template-pkg)
+      (ess-eval-linewise
+       (format "rmarkdown::draft(file = \"%s\", template = \"%s\",
+                package = \"%s\", edit = FALSE)"
+               rmd-file template-name template-pkg))
+      )
+    ;; Graphics device management ;;
+    (defun tide-new-gdev ()
+      "create a new graphics device"
+      (interactive)
+      (ess-eval-linewise "dev.new()"))
+
+    (defun tide-cur-gdev ()
+      "return current graphics device"
+      (interactive)
+      (ess-eval-linewise "dev.cur()"))
+
+    (defun tide-list-all-gdev ()
+      "list all graphics devices"
+      (interactive)
+      (ess-eval-linewise "dev.list()"))
+
+    (defun tide-switch-to-gdev ()
+      "Prompt for the number of the graphics device to make current"
+      (interactive)
+      (setq dev-num
+            (read-from-minibuffer "Select R graphics device: "
+                                  nil nil t t "1"))
+      (ess-eval-linewise
+       (format "dev.set(%s)" dev-num)))
+
+    (defun tide-switch-next-gdev ()
+      "switch to next available graphics device"
+      (interactive)
+      (ess-eval-linewise "dev.set(dev.next())"))
+
+    (defun tide-switch-prev-gdev ()
+      "switch to previous available graphics device"
+      (interactive)
+      (ess-eval-linewise "dev.set(dev.prev())"))
+
+    (defun tide-save-gdev-pdf ()
+      "Save current graphics device as pdf"
+      (interactive)
+      (ess-eval-linewise "dev.copy2pdf()"))
+
+    (defun tide-capture-gdev ()
+      "Capture current graphics device as image"
+      (interactive)
+      (ess-eval-linewise "dev.capture()"))
+
+    ;; Devtools
+    (defun tide-devtools-setup ()
+      "setup R package in current working directory"
+      (interactive)
+      (ess-eval-linewise "devtools::setup()"))
+
+    ;; Shiny
+    (defun tide-shiny-run-app ()
+      "Run a shiny app in the current working directory"
+      (interactive)
+      (ess-eval-linewise "shiny::runApp()"))
+
+    ;; Rmarkdowm
+    (defun tide-rmd-rend ()
+      "Render rmarkdown files with an interactive selection prompt"
+      (interactive)
+      (ess-eval-linewise "mmmisc::rend()"))
+
+    ;; Data Views
+    (defun df-at-point-to-buffer (&optional numrows)
+      "output a sample of another data.frame to and jump to buffer."
+      (let ((object (symbol-at-point))
+            (r-process (ess-get-process))
+            (r-output-buffer (get-buffer-create "*R-output*"))
+            (numrows (or numrows 300)))
+        (ess-command
+         (format "mmmisc::df_preview(%s, %s)\n" object numrows)
+         r-output-buffer nil nil nil r-process)
+        (switch-to-buffer-other-window r-output-buffer)
+        ))
+
+    (defun df-sample-small ()
+      "Sample and print 30 rows of a data.frame"
+      (interactive)
+      (df-at-point-to-buffer 30)
+      )
+
+    (defun df-sample-medium ()
+      "Sample and print 300 rows of a data.frame"
+      (interactive)
+      (df-at-point-to-buffer 300)
+      )
+
+    (defun df-sample-large ()
+      "Sample and print 3000 rows of a data.frame"
+      (interactive)
+      (df-at-point-to-buffer 3000)
+      )
+
+    ;;======================================================================
+    ;; (R) markdown mode
+    ;;======================================================================
+
+    ;; Insert a new (empty) chunk to R markdown ============================
+    (defun insert-chunk ()
+      "Insert chunk environment Rmd sessions."
+      (interactive)
+      (insert "```{r}\n\n```")
+      (forward-line -1)
+      )
+    ;; key binding
+    (global-set-key (kbd "C-c i") 'insert-chunk)
+
+    ;; Mark a word at a point ==============================================
+    ;; http://www.emacswiki.org/emacs/ess-edit.el
+    (defun ess-edit-word-at-point ()
+      (save-excursion
+        (buffer-substring
+         (+ (point) (skip-chars-backward "a-zA-Z0-9._"))
+         (+ (point) (skip-chars-forward "a-zA-Z0-9._")))))
+    ;; eval any word where the cursor is (objects, functions, etc)
+    (defun ess-eval-word ()
+      (interactive)
+      (let ((x (ess-edit-word-at-point)))
+        (ess-eval-linewise (concat x)))
+      )
+    ;; key binding
+    (define-key ess-mode-map (kbd "C-c r") 'ess-eval-word)
+    ))
+
+  ;; Add fix for read-only ESS REPL
+  ;; https://github.com/emacs-ess/ESS/issues/300
+  (add-hook 'inferior-ess-mode-hook #'(lambda ()
+                                        (setq-local comint-use-prompt-regexp nil)
+                                        (setq-local inhibit-field-text-motion nil)))
+
+  (eval-after-load "ess-r-mode" spacemacs/ess-config)
+  (eval-after-load "ess-julia" spacemacs/ess-config))
+
+
+
 
 (defun ess/init-ess-R-data-view ())
 
-(defun ess/init-ess-R-object-popup ())
-
-(defun ess/post-init-rainbow-delimiters ()
-  (add-hook 'ess-mode-hook #'rainbow-delimiters-mode))
-
-;; To enable smart-equals-mode
 (defun ess/init-ess-smart-equals ()
   (use-package ess-smart-equals
     :defer t
     :if ess-enable-smart-equals
     :init
-    ;; (setq ess-smart-equals-extra-ops '(brace paren percent))
     (progn
       (add-hook 'ess-mode-hook 'ess-smart-equals-mode)
       (add-hook 'inferior-ess-mode-hook 'ess-smart-equals-mode))))
 
-;; To enable smartparens-mode in ess and iess
-(defun ess/post-init-smartparens ()
-  (use-package smartparens
-    :defer t
-    :if ess-enable-smartparens
-    :diminish smartparens-mode
-    :config
-    (progn
-      (require 'smartparens-config)
-      (smartparens-global-mode 1)
-      (sp-pair "\"" nil :unless '(sp-point-after-word-p))
-      (sp-pair "'" nil :unless '(sp-point-after-word-p))
-      (sp-local-pair '(ess-mode inferior-ess-mode) "(" nil :unless '(sp-point-before-word-p))
-      (sp-local-pair '(ess-mode inferior-ess-mode) "[" nil :unless '(sp-point-before-word-p))
-      (sp-local-pair '(ess-mode inferior-ess-mode) "{" nil :unless '(sp-point-before-word-p)))
-    :init
-    (progn
-      (add-hook 'ess-mode-hook 'smartparens-mode)
-      (add-hook 'inferior-ess-mode-hook 'smartparens-mode))))
+(defun ess/pre-init-golden-ratio ()
+  (spacemacs|use-package-add-hook golden-ratio
+    :post-config
+    (dolist (f '(ess-eval-buffer-and-go
+                 ess-eval-function-and-go
+                 ess-eval-line-and-go))
+      (add-to-list 'golden-ratio-extra-commands f))))
 
-;; To enable electric-spacing-mode in ess and iess
-(defun ess/init-electric-spacing-r ()
-  (use-package electric-spacing-r
-    ;; :defer t
-    :if ess-enable-electric-spacing-r
-    :init
-    (progn
-      (add-hook 'ess-mode-hook 'electric-spacing-mode))))
-      ;; (add-hook 'inferior-ess-mode-hook 'electric-spacing-mode))))
+(defun ess/pre-init-org ()
+  (spacemacs|use-package-add-hook org
+    :post-config (add-to-list 'org-babel-load-languages '(R . t))))
 
-(defun ess/init-essh ()
-  (use-package essh
-    :config
-    (progn
-      (add-hook
-       'sh-mode-hook
-       '(lambda ()
-          (define-key sh-mode-map "\C-c\C-r" 'pipe-region-to-shell)
-          (define-key sh-mode-map "\C-c\C-b" 'pipe-buffer-to-shell)
-          (define-key sh-mode-map "\C-c\C-j" 'pipe-line-to-shell)
-          ;; (define-key sh-mode-map "\C-c\C-n" 'pipe-line-to-shell-and-step)
-          (define-key sh-mode-map (kbd "<C-return>") 'pipe-line-to-shell-and-step)
-          (define-key sh-mode-map "\C-c\C-f" 'pipe-function-to-shell)
-          (define-key sh-mode-map "\C-c\C-d" 'shell-cd-current-directory))))))
+(defun R-scratch ()
+  (interactive)
+  (progn
+    (delete-other-windows)
+    (setq new-buf (get-buffer-create "scratch.R"))
+    (switch-to-buffer new-buf)
+    (R-mode)
+    (setq w1 (selected-window))
+    (setq w1name (buffer-name))
+    (setq w2 (split-window w1 nil t))
+    (if (not (member "*R*" (mapcar (function buffer-name) (buffer-list))))
+        (R))
+    (set-window-buffer w2 "*R*")
+    (set-window-buffer w1 w1name)))
