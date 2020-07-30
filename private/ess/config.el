@@ -26,3 +26,24 @@
 ;; iESS buffer to appear in the console, instead of appearing only
 ;; outputs.
 (setq ess-eval-visibly t)
+
+(setq ess-default-style 'RStudio)
+(setq tab-always-indent 'complete)
+
+(add-hook 'inferior-ess-mode-hook
+          '(lambda nil
+             (define-key inferior-ess-mode-map [\C-up]
+               'comint-previous-matching-input-from-input)
+             (define-key inferior-ess-mode-map [\C-down]
+               'comint-next-matching-input-from-input)
+             (define-key inferior-ess-mode-map [\C-x \t]
+               'comint-dynamic-complete-filename)
+             )
+          )
+
+(setq ess-ask-for-ess-directory nil)
+(setq ess-local-process-name "R")
+(setq ansi-color-for-comint-mode 'filter)
+(setq comint-scroll-to-bottom-on-input t)
+(setq comint-scroll-to-bottom-on-output t)
+(setq comint-move-point-for-output t)

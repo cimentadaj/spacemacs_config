@@ -123,8 +123,7 @@
   (move-end-of-line nil)
   )
 ;; key binding
-(global-set-key [?\C--] 'insert-rule-and-comment-3)
-
+(global-set-key (kbd "C-c -") 'insert-rule-and-comment-3)
 
 ;; Move lines ==========================================================
 ;; http://www.emacswiki.org/emacs/MoveLine
@@ -222,3 +221,23 @@ command append each line to the kill-ring."
 ;; key binding
 ;; (global-set-key "\C-c\M-k" 'quick-cut-line)
 (global-set-key (kbd "s-<delete>") 'quick-cut-line)
+
+(defun my-new-daily-review ()
+  (interactive)
+  (let ((org-capture-templates '(("d" "Review: Daily Review" entry (file+olp+datetree "/tmp/daily_reviews.org")
+                                  (file "~/google_drive/gtd/dailyreviewtemplate.org")))))
+    (progn
+      (org-capture nil "d")
+      (org-capture-finalize t)
+      (org-speed-move-safe 'outline-up-heading)
+      (org-narrow-to-subtree)
+      (fetch-calendar)
+      (org-clock-in))))
+
+(defun org-archive-done-tasks ()
+  (interactive)
+  (org-map-entries
+   (lambda ()
+     (org-archive-subtree)
+     (setq org-map-continue-from (org-element-property :begin (org-element-at-point))))
+   "/DONE" 'file))

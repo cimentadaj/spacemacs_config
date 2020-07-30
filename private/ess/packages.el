@@ -1,4 +1,4 @@
-;;; packages.el --- ESS (R) Layer packages File for Spacemacs
+;; packages.el --- ESS (R) Layer packages File for Spacemacs
 ;;
 ;; Copyright (c) 2012-2017 Sylvain Benner & Contributors
 ;;
@@ -65,11 +65,11 @@
     '(progn
     ;; Follow Hadley Wickham's R style guide
     (setq ess-first-continued-statement-offset 2
-          ess-continued-statement-offset 0
+          ess-continued-statement-offset 2
           ess-expression-offset 2
           ess-nuke-trailing-whitespace-p t
-          ess-default-style 'DEFAULT)
-
+          ess-default-style 'DEFAULT
+          ess-indent-offset 2)
     (defun spacemacs/ess-start-repl ()
       "Start a REPL corresponding to the ess-language of the current buffer."
       (interactive)
@@ -147,8 +147,8 @@
       "Sr" 'tide-shiny-run-app
       )
     (define-key ess-mode-map (kbd "<s-return>") 'ess-eval-line)
-    (define-key inferior-ess-mode-map (kbd "C-j") 'comint-next-input)
-    (define-key inferior-ess-mode-map (kbd "C-k") 'comint-previous-input)
+    ;; (define-key inferior-ess-mode-map (kbd "C-j") 'comint-next-input)
+    ;; (define-key inferior-ess-mode-map (kbd "C-k") 'comint-previous-input)
     ;; Toggle underscore off no replacement of _ for <-
     (setq ess-smart-S-assign-key nil)
     ;; Stop R repl eval from blocking emacs.
@@ -176,13 +176,17 @@
     (defun tide-insert-pipe ()
       "Insert a %>% and newline"
       (interactive)
-      (insert "%>%"))
+      (insert " %>% "))
     (defun tide-insert-assign ()
       "Insert an assignment <-"
       (interactive)
-      (insert "<- "))
-    (define-key ess-mode-map (kbd "C-<") 'tide-insert-pipe)
-    (define-key ess-mode-map (kbd "C->") 'tide-insert-assign)
+      (insert " <- "))
+
+    (define-key ess-mode-map (kbd "C->") 'tide-insert-pipe)
+    (define-key ess-mode-map (kbd "C-<") 'tide-insert-assign)
+    (define-key inferior-ess-mode-map (kbd "C->") 'tide-insert-pipe)
+    (define-key inferior-ess-mode-map (kbd "C-<") 'tide-insert-assign)
+
 
     (defun tide-draft-rmd ()
       "Draft a new Rmd file from a template interactively."
@@ -390,3 +394,15 @@
         (R))
     (set-window-buffer w2 "*R*")
     (set-window-buffer w1 w1name)))
+
+(defun my-ess--R ()
+  (interactive)
+  (if (not (member "*R*" (mapcar (function buffer-name) (buffer-list))))
+      (progn
+        (delete-other-windows)
+        (setq w1 (selected-window))
+        (setq w1name (buffer-name))
+        (setq w2 (split-window w1 nil t))
+        (R)
+        (set-window-buffer w2 "*R*")
+        (set-window-buffer w1 w1name))))

@@ -1,3 +1,4 @@
+;; `used-only' installs only explicitly used packages and uninstall any
 ;; -*- mode: emacs-lisp -*-
 ;; This file is loaded by Spacemacs at startup.
 ;; It must be stored in your home directory.
@@ -37,8 +38,11 @@ values."
      ;; <M-m f e R> (Emacs style) to install them.
      ;; ----------------------------------------------------------------
      csv
-     helm
-     auto-completion
+     ivy
+     (auto-completion :variables
+                      auto-completion-enable-help-tooltip 'manual
+                      auto-completion-enable-snippets-in-popup t
+                      auto-completion-enable-sort-by-usage t)
      better-defaults
      emacs-lisp
      git
@@ -46,23 +50,31 @@ values."
      org
      (shell :variables
             shell-default-height 30
-            shell-default-position 'bottom)
-     (spell-checking :variables spell-checking-enable-by-default nil)
-     (syntax-checking :variables syntax-checking-enable-by-default nil)
+            shell-default-position 'bottom
+            org-todo-keywords' ((sequence "TODO" "IN PROCESS" "WAITING"
+                                          "|" "DONE"))
+            org-log-done 'time
+            org-log-done 'note)
+     ;; (spell-checking :variables spell-checking-enable-by-default nil)
+     ;; (syntax-checking :variables syntax-checking-enable-by-default nil)
+     spell-checking
+     syntax-checking
      ipython-notebook
      rust
      html
      yaml
+     docker
      ;; version-control
      ;; ess
      latex
      extra-langs
      ;; private layers
-     elpy
+     pythonp
      (ess :variables
           ;; ess-enable-smart-equals t
           ess-enable-electric-spacing-r t
-          ess-enable-smartparens t)
+          ess-enable-smartparens t
+          ess-r-backend 'lsp)
      funk
      polymode
      )
@@ -70,7 +82,9 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(
+   dotspacemacs-additional-packages '(expand-region
+                                      helm-projectile
+                                      helm-ag
                                       solarized-theme
                                       poly-R
                                       poly-noweb
@@ -81,7 +95,6 @@ values."
    dotspacemacs-excluded-packages '()
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
-   ;; `used-only' installs only explicitly used packages and uninstall any
    ;; unused packages as well as their unused dependencies.
    ;; `used-but-keep-unused' installs only the used packages but won't uninstall
    ;; them if they become unused. `all' installs *all* packages supported by
@@ -146,7 +159,7 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(spacemacs-dark
+   dotspacemacs-themes '(doom-one
                          spacemacs-light
                          solarized-dark
                          solarized-light
@@ -247,7 +260,7 @@ values."
    dotspacemacs-loading-progress-bar t
    ;; If non nil the frame is fullscreen when Emacs starts up. (default nil)
    ;; (Emacs 24.4+ only)
-   dotspacemacs-fullscreen-at-startup nil
+   dotspacemacs-fullscreen-at-startup t
    ;; If non nil `spacemacs/toggle-fullscreen' will not use native fullscreen.
    ;; Use to disable fullscreen animations in OSX. (default nil)
    dotspacemacs-fullscreen-use-non-native nil
@@ -317,7 +330,7 @@ values."
    ;; `trailing' to delete only the whitespace at end of lines, `changed'to
    ;; delete only whitespace for changed lines or `nil' to disable cleanup.
    ;; (default nil)
-   dotspacemacs-whitespace-cleanup 'trailing
+   dotspacemacs-whitespace-cleanup 'nil
    ))
 
 (defun dotspacemacs/user-init ()
@@ -336,16 +349,34 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
-;; Text settings =====================================================
+  ;; Text settings =====================================================
   (setq-default
    ;; Break lines at specified column (<= 80, defaults 72)
-   fill-column 72
+   fill-column 90
    ;; Turns on auto-fill-mode to automatically break lines
-   auto-fill-function 'do-auto-fill
+   ;; auto-fill-function 'do-auto-fill
    ;; Makes the kill-ring (emacs clipboard) to store only 4 entries,
    ;; otherwise it may flush memory
    kill-ring-max 4
+   whitespace-line-column 80
+   whitespace-style '(face lines-tail)
    )
+
+  ;; Expand-region to delete when writing under selection
+  (pending-delete-mode t)
+
+  (add-hook 'prog-mode-hook #'whitespace-mode)
+
+  (find-file "~/google_drive/gtd/inbox.org")
+
+  (define-key org-mode-map (kbd "M-n") 'eval-region)
+
+  (custom-set-faces
+   '(company-tooltip-common
+     ((t (:inherit company-tooltip :weight bold :underline nil))))
+   '(company-tooltip-common-selection
+     ((t (:inherit company-tooltip-selection :weight bold :underline nil)))))
+
   ;; When scrolling with the cursor, show 4 lines above/below
   (setq scroll-margin 5)
   ;; Deactivate scroll margin in terminals
@@ -363,7 +394,7 @@ you should place your code here."
      inferior-python-mode-hook
      ))
   ;; Turn on FCI (Fill Column Indicator) mode
-  ; (turn-on-fci-mode)
+                                        ; (turn-on-fci-mode)
   ;; Maxima mode https://www.emacswiki.org/emacs/MaximaMode
   ;; (add-to-list 'load-path "/usr/local/share/maxima/5.18.1/emacs/")
   (autoload 'maxima-mode "maxima" "Maxima mode" t)
@@ -372,6 +403,8 @@ you should place your code here."
   (autoload 'imath-mode "imath" "Imath mode for math formula input" t)
   (setq imaxima-use-maxima-mode-flag t)
   (add-to-list 'auto-mode-alist '("\\.ma[cx]" . maxima-mode))
+  ;; (add-hook 'prog-mode-hook 'column-enforce-mode) ;; For highlighting in red
+  ;; Automatically set to 80
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
@@ -383,7 +416,7 @@ you should place your code here."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (solarized-theme lv csv-mode electric-spacing thrift stan-mode scad-mode qml-mode matlab-mode transient arduino-mode poly-R poly-noweb poly-markdown graphql treepy julia-mode jedi jedi-core python-environment epc concurrent elpy pyvenv find-file-in-project ivy yaml-mode web-mode toml-mode tagedit slim-mode scss-mode sass-mode racer pug-mode polymode helm-css-scss haml-mode flycheck-rust ess-smart-equals ess-R-data-view ctable ess emmet-mode ein skewer-mode request-deferred websocket deferred js2-mode simple-httpd company-web web-completion-data company-auctex cargo rust-mode auctex-latexmk auctex xterm-color unfill smeargle shell-pop orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download mwim multi-term mmm-mode markdown-toc markdown-mode magit-gitflow htmlize helm-gitignore helm-company helm-c-yasnippet gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck evil-magit magit magit-popup git-commit ghub with-editor eshell-z eshell-prompt-extras esh-help company-statistics company auto-yasnippet yasnippet auto-dictionary ac-ispell auto-complete ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async))))
+    (flyspell-correct flycheck helm-themes helm-swoop helm-mode-manager helm-flx helm-descbinds ace-jump-helm-line yapfify yaml-mode xterm-color ws-butler winum which-key wgrep web-mode volatile-highlights vi-tilde-fringe uuidgen use-package unfill toml-mode toc-org thrift tagedit stan-mode spaceline solarized-theme smex smeargle slim-mode shell-pop scss-mode scad-mode sass-mode restart-emacs rainbow-delimiters racer qml-mode pytest pyenv-mode py-isort pug-mode popwin poly-R pip-requirements persp-mode pcre2el paradox orgit org-projectile org-present org-pomodoro org-mime org-download org-bullets open-junk-file neotree mwim multi-term move-text mmm-mode matlab-mode markdown-toc magit-gitflow macrostep lorem-ipsum live-py-mode linum-relative link-hint julia-mode ivy-hydra indent-guide hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers helm-projectile helm-make helm-ag google-translate golden-ratio gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy flyspell-correct-ivy flycheck-rust flycheck-pos-tip flx-ido fill-column-indicator fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu ess-smart-equals ess-R-data-view eshell-z eshell-prompt-extras esh-help emmet-mode elpy elisp-slime-nav ein dumb-jump doom-themes dockerfile-mode docker diminish define-word cython-mode csv-mode counsel-projectile company-web company-statistics company-quickhelp company-auctex company-anaconda column-enforce-mode clean-aindent-mode cargo auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile auctex-latexmk arduino-mode aggressive-indent adaptive-wrap ace-window ace-link ac-ispell))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

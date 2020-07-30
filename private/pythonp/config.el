@@ -1,0 +1,16 @@
+(defun python-scratch ()
+  (interactive)
+  (progn
+    (delete-other-windows)
+    (setq new-buf (get-buffer-create "scratch.py"))
+    (switch-to-buffer new-buf)
+    (python-mode)
+    (setq w1 (selected-window))
+    (setq w1name (buffer-name))
+    (setq w2 (split-window w1 nil t))
+    (if (not (member "*Python*" (mapcar (function buffer-name) (buffer-list))))
+        (run-python))
+    (set-window-buffer w2 "*Python*")
+    (set-window-buffer w1 w1name)))
+
+(global-set-key (kbd "C-x 7") 'python-scratch)

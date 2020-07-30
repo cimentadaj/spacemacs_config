@@ -8,7 +8,7 @@
 (fset 'yes-or-no-p 'y-or-n-p)
 
 ;; Start emacs with full screen
-(add-to-list 'default-frame-alist '(fullscreen . maximized))
+;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
 ;; Show line numbering on all buffers
 ;; Ideally, I'd like only line numbering
@@ -23,10 +23,6 @@
 ;; (setq truncate-partial-width-windows nil)
 
 ;; Adds 80 character line tweaks
-(setq-default
- whitespace-line-column 80
- whitespace-style       '(face lines-tail))
+;; (add-hook 'prog-mode-hook #'whitespace-mode)
 
-(add-hook 'prog-mode-hook #'whitespace-mode)
-
-(setq-default fill-column 80)
+(projectile-discover-projects-in-directory "~/repositories/")
