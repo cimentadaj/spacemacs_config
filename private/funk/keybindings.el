@@ -25,6 +25,9 @@
 (global-set-key (kbd "C-=") 'er/expand-region)
 (global-set-key (kbd "C--") 'er/contract-region)
 
+(global-set-key (kbd "<M-down>") 'forward-paragraph)
+(global-set-key (kbd "<M-up>") 'backward-paragraph)
+
 (global-set-key (kbd "C-x C-a C-a") 'org-archive-done-tasks)
 
 (bind-key "TAB" #'indent-for-tab-command)

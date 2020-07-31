@@ -45,6 +45,7 @@ values."
                       auto-completion-enable-sort-by-usage t)
      better-defaults
      emacs-lisp
+     shell-scripts
      git
      markdown
      org
@@ -57,8 +58,14 @@ values."
             org-log-done 'note)
      ;; (spell-checking :variables spell-checking-enable-by-default nil)
      ;; (syntax-checking :variables syntax-checking-enable-by-default nil)
-     spell-checking
-     syntax-checking
+     (spell-checking :variables
+                     spell-checking-enable-auto-dictionary t
+                     )
+     (syntax-checking :variables
+                      flycheck-check-syntax-automatically (quote (save idle-change mode-enabled))
+                      flycheck-idle-change-delay 4 ;; Set delay based on what suits you the best
+                      syntax-checking-enable-tooltips nil
+                      )
      ipython-notebook
      rust
      html
@@ -82,7 +89,13 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(expand-region
+   dotspacemacs-additional-packages '(doom-modeline
+                                      all-the-icons
+                                      all-the-icons-ivy-rich
+                                      all-the-icons-dired
+                                      solaire-mode
+                                      ivy-rich
+                                      expand-region
                                       helm-projectile
                                       helm-ag
                                       solarized-theme
@@ -362,14 +375,74 @@ you should place your code here."
    whitespace-style '(face lines-tail)
    )
 
+  ;; Sets default directory
+  (setq default-directory "~/")
+  ;; Inhibits the Emacs startup message w/ tutorial, etc..
+  (setq inhibit-startup-message t)
+  (tool-bar-mode -1)
+
+  ;; Whenever emacs asks for yes or no, just y or n
+  (fset 'yes-or-no-p 'y-or-n-p)
+
+  (setq-default
+   ;; doom-modeline
+   inhibit-compacting-font-caches t
+   doom-modeline-buffer-file-name-style 'relative-from-project
+   doom-modeline-bar-width 1
+   doom-modeline-modal-icon nil
+   doom-modeline-height 15
+   doom-modeline-env-python-executable "python3"
+   ;; all-the-icons
+   all-the-icons-scale-factor 1.0
+   all-the-icons-install-fonts
+   )
+
+  ;; Custom doom-modeline
+  (doom-modeline-mode 1)
+
+  (when (member "Menlo" (font-family-list))
+    (set-face-attribute 'mode-line nil :height 110 :font "Menlo")
+    (set-face-attribute 'mode-line-inactive nil :height 110 :font "Menlo"))
+
+  (all-the-icons-ivy-rich-mode 1)
+  (ivy-rich-mode 1)
+
+  ;; Start emacs with full screen
+  ;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
+
+  ;; Show line numbering on all buffers
+  ;; Ideally, I'd like only line numbering
+  ;; on the left buffers but I don't know
+  ;; how to do it.
+  (global-display-line-numbers-mode)
+
+  ;; Set lines to continue if they're too long instead of
+  ;; continuing them in the next line
+  (setq-default truncate-lines t)
+  ;; (setq toggle-truncate-lines t)
+  ;; (setq truncate-partial-width-windows nil)
+
+
+  ;; Flycheck hook for different modes
+  (add-hook 'ess-mode-hook 'flycheck-mode)
+  (add-hook 'emacs-lisp-mode-hook 'flycheck-mode)
+  (add-hook 'python-mode-hook 'flycheck-mode)
+
+  ;; (define-key 'company-active-map (kbd "TAB") #'company-indent-or-complete-common)
+
+  (projectile-discover-projects-in-directory "~/repositories/")
+
   ;; Expand-region to delete when writing under selection
   (pending-delete-mode t)
 
+  ;; For highlighting in red after 80th column
   (add-hook 'prog-mode-hook #'whitespace-mode)
 
+  ;; Open up first file as inbox
   (find-file "~/google_drive/gtd/inbox.org")
 
-  (define-key org-mode-map (kbd "M-n") 'eval-region)
+  ;; For evaluation emacs-lisp code chunk in org mode
+  (define-key 'org-mode-map (kbd "M-n") 'eval-region)
 
   (custom-set-faces
    '(company-tooltip-common
@@ -414,12 +487,16 @@ you should place your code here."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(evil-want-Y-yank-to-eol nil)
+ '(flycheck-lintr-linters
+   "with_defaults(trailing_blank_lines_linter = NULL, object_usage_linter = NULL)")
  '(package-selected-packages
    (quote
-    (flyspell-correct flycheck helm-themes helm-swoop helm-mode-manager helm-flx helm-descbinds ace-jump-helm-line yapfify yaml-mode xterm-color ws-butler winum which-key wgrep web-mode volatile-highlights vi-tilde-fringe uuidgen use-package unfill toml-mode toc-org thrift tagedit stan-mode spaceline solarized-theme smex smeargle slim-mode shell-pop scss-mode scad-mode sass-mode restart-emacs rainbow-delimiters racer qml-mode pytest pyenv-mode py-isort pug-mode popwin poly-R pip-requirements persp-mode pcre2el paradox orgit org-projectile org-present org-pomodoro org-mime org-download org-bullets open-junk-file neotree mwim multi-term move-text mmm-mode matlab-mode markdown-toc magit-gitflow macrostep lorem-ipsum live-py-mode linum-relative link-hint julia-mode ivy-hydra indent-guide hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers helm-projectile helm-make helm-ag google-translate golden-ratio gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy flyspell-correct-ivy flycheck-rust flycheck-pos-tip flx-ido fill-column-indicator fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu ess-smart-equals ess-R-data-view eshell-z eshell-prompt-extras esh-help emmet-mode elpy elisp-slime-nav ein dumb-jump doom-themes dockerfile-mode docker diminish define-word cython-mode csv-mode counsel-projectile company-web company-statistics company-quickhelp company-auctex company-anaconda column-enforce-mode clean-aindent-mode cargo auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile auctex-latexmk arduino-mode aggressive-indent adaptive-wrap ace-window ace-link ac-ispell))))
+    (all-the-icons-ivy-rich shrink-path doom-dracula-theme highlight-escape-sequences highlight-operators all-the-icons-dired all-the-icons-ivy doom-modeline solaire-mode doom-custom-theme memoize all-the-icons doom-modeline-theme insert-shebang fish-mode company-shell powerline poly-noweb poly-markdown org-category-capture alert log4e gntp org-plus-contrib magit-popup hydra lv dash-functional parent-mode helm helm-core haml-mode flx highlight magit git-commit smartparens iedit anzu evil goto-chg undo-tree ctable ess pyvenv highlight-indentation with-editor exec-path-from-shell polymode deferred request anaphora websocket transient tablist json-mode docker-tramp json-snatcher json-reformat projectile pkg-info epl counsel swiper ivy web-completion-data pos-tip company markdown-mode rust-mode bind-map bind-key yasnippet packed auctex async spinner anaconda-mode pythonic f s avy auto-complete popup flyspell-correct flycheck helm-themes helm-swoop helm-mode-manager helm-flx helm-descbinds ace-jump-helm-line yapfify yaml-mode xterm-color ws-butler winum which-key wgrep web-mode volatile-highlights vi-tilde-fringe uuidgen use-package unfill toml-mode toc-org thrift tagedit stan-mode spaceline solarized-theme smex smeargle slim-mode shell-pop scss-mode scad-mode sass-mode restart-emacs rainbow-delimiters racer qml-mode pytest pyenv-mode py-isort pug-mode popwin poly-R pip-requirements persp-mode pcre2el paradox orgit org-projectile org-present org-pomodoro org-mime org-download org-bullets open-junk-file neotree mwim multi-term move-text mmm-mode matlab-mode markdown-toc magit-gitflow macrostep lorem-ipsum live-py-mode linum-relative link-hint julia-mode ivy-hydra indent-guide hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers helm-projectile helm-make helm-ag google-translate golden-ratio gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy flyspell-correct-ivy flycheck-rust flycheck-pos-tip flx-ido fill-column-indicator fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu ess-smart-equals ess-R-data-view eshell-z eshell-prompt-extras esh-help emmet-mode elpy elisp-slime-nav ein dumb-jump doom-themes dockerfile-mode docker diminish define-word cython-mode csv-mode counsel-projectile company-web company-statistics company-quickhelp company-auctex company-anaconda column-enforce-mode clean-aindent-mode cargo auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile auctex-latexmk arduino-mode aggressive-indent adaptive-wrap ace-window ace-link ac-ispell))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
+ '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil)))))

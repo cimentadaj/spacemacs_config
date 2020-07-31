@@ -1,4 +1,4 @@
-(use-package doom-themes
+ (use-package doom-themes
    :ensure t)
 
  ;; Global settings (defaults)
@@ -12,7 +12,7 @@
  ;; Enable flashing mode-line on errors
  (doom-themes-visual-bell-config)
 
-m ;; Enable custom neotree theme (all-the-icons must be installed!)
+ ;; Enable custom neotree theme (all-the-icons must be installed!)
  (doom-themes-neotree-config)
  ;; or for treemacs users
  (setq doom-themes-treemacs-theme "doom-colors") ; use the colorful treemacs theme
@@ -36,28 +36,28 @@ m ;; Enable custom neotree theme (all-the-icons must be installed!)
  ;;   :config
  ;;   (load -theme 'spacemacs-dark t))
 
- ;; (use-package solaire-mode
- ;;   :ensure t
- ;;   :hook (((change-major-mode after-revert ediff-prepare-buffer) . turn-on-solaire-mode)
- ;;     (minibuffer-setup . solaire-mode-in-minibuffer))
- ;;   :config
- ;;   (solaire-mode-swap-bg)
- ;;   (solaire-global-mode +1))
+ (use-package solaire-mode
+   :ensure t
+   :hook (((change-major-mode after-revert ediff-prepare-buffer) . turn-on-solaire-mode)
+	   (minibuffer-setup . solaire-mode-in-minibuffer))
+   :config
+   (solaire-mode-swap-bg)
+   (solaire-global-mode +1))
 
- ;; (use-package doom-modeline
- ;;   :ensure t
- ;;   :hook (after-init . doom-modeline-mode)
- ;;   :custom
- ;;   (inhibit-compacting-font-caches t)
- ;;   (doom-modeline-buffer-file-name-style 'relative-from-project)
- ;;   (doom-modeline-bar-width 1)
- ;;   (doom-modeline-modal-icon nil)
- ;;   (doom-modeline-height 15)
- ;;   (doom-modeline-env-python-executable "python3")
- ;;   :config
- ;;   (when (member "Menlo" (font-family-list))
- ;;     (set-face-attribute 'mode-line nil :height 110 :font "Menlo")
- ;;     (set-face-attribute 'mode-line-inactive nil :height 110 :font "Menlo")))
+ (use-package doom-modeline
+   :ensure t
+   :hook (after-init . doom-modeline-mode)
+   :custom
+   (inhibit-compacting-font-caches t)
+   (doom-modeline-buffer-file-name-style 'relative-from-project)
+   (doom-modeline-bar-width 1)
+   (doom-modeline-modal-icon nil)
+   (doom-modeline-height 15)
+   (doom-modeline-env-python-executable "python3")
+   :config
+   (when (member "Menlo" (font-family-list))
+     (set-face-attribute 'mode-line nil :height 110 :font "Menlo")
+     (set-face-attribute 'mode-line-inactive nil :height 110 :font "Menlo")))
 
  (use-package all-the-icons
    :ensure t
@@ -65,51 +65,51 @@ m ;; Enable custom neotree theme (all-the-icons must be installed!)
    (all-the-icons-scale-factor 1.0)
    (all-the-icons-install-fonts))
 
- ;; (use-package all-the-icons-ivy
- ;;   :ensure t
- ;;   :hook (after-init . all-the-icons-ivy-setup)
+ (use-package all-the-icons-ivy
+   :ensure t
+   :hook (after-init . all-the-icons-ivy-setup)
+   :custom
+   (all-the-icons-ivy-buffer-commands '()))
+
+ (use-package all-the-icons-dired
+   :ensure t
+   :hook (dired-mode . all-the-icons-dired-mode))
+
+ ;; (use-package centaur-tabs
+ ;;   :demand
+ ;;   :bind (("C-S-<tab>" . centaur-tabs-backward)
+ ;; 	 ("C-<tab>" . centaur-tabs-forward)
+ ;; 	 ("C-x p" . centaur-tabs-counsel-switch-group))
  ;;   :custom
- ;;   (all-the-icons-ivy-buffer-commands '()))
+ ;;   (centaur-tabs-set-bar 'under)
+ ;;   (x-underline-at-descent-line t)
+ ;;   (centaur-tabs-set-modified-marker t)
+ ;;   (centaur-tabs-modified-marker " ● ")
+ ;;   (centaur-tabs-cycle-scope 'tabs)
+ ;;   (centaur-tabs-height 30)
+ ;;   (centaur-tabs-set-icons t)
+ ;;   (centaur-tabs-close-button " × ")
+ ;;   :config
+ ;;   (centaur-tabs-mode +1)
+ ;;   (centaur-tabs-headline-match)
+ ;;   (centaur-tabs-group-by-projectile-project)
+ ;;   (when (member "Arial" (font-family-list))
+ ;;     (centaur-tabs-change-fonts "Arial" 130)))
 
- ;; (use-package all-the-icons-dired
+ ;; (use-package highlight-symbol
  ;;   :ensure t
- ;;   :hook (dired-mode . all-the-icons-dired-mode))
+ ;;   :hook (prog-mode . highlight-symbol-mode)
+ ;;   :custom
+ ;;   (high light-symbol-idle-delay 0.3))
 
- ;; ;; (use-package centaur-tabs
- ;; ;;   :demand
- ;; ;;   :bind (("C-S-<tab>" . centaur-tabs-backward)
- ;; ;; 	 ("C-<tab>" . centaur-tabs-forward)
- ;; ;; 	 ("C-x p" . centaur-tabs-counsel-switch-group))
- ;; ;;   :custom
- ;; ;;   (centaur-tabs-set-bar 'under)
- ;; ;;   (x-underline-at-descent-line t)
- ;; ;;   (centaur-tabs-set-modified-marker t)
- ;; ;;   (centaur-tabs-modified-marker " ● ")
- ;; ;;   (centaur-tabs-cycle-scope 'tabs)
- ;; ;;   (centaur-tabs-height 30)
- ;; ;;   (centaur-tabs-set-icons t)
- ;; ;;   (centaur-tabs-close-button " × ")
- ;; ;;   :config
- ;; ;;   (centaur-tabs-mode +1)
- ;; ;;   (centaur-tabs-headline-match)
- ;; ;;   (centaur-tabs-group-by-projectile-project)
- ;; ;;   (when (member "Arial" (font-family-list))
- ;; ;;     (centaur-tabs-change-fonts "Arial" 130)))
+ (use-package highlight-numbers
+   :ensure t
+   :hook (prog-mode . highlight-numbers-mode))
 
- ;; ;; (use-package highlight-symbol
- ;; ;;   :ensure t
- ;; ;;   :hook (prog-mode . highlight-symbol-mode)
- ;; ;;   :custom
- ;; ;;   (high light-symbol-idle-delay 0.3))
+ (use-package highlight-operators
+   :ensure t
+   :hook (prog-mode . highlight-operators-mode))
 
- ;; (use-package highlight-numbers
- ;;   :ensure t
- ;;   :hook (prog-mode . highlight-numbers-mode))
-
- ;; (use-package highlight-operators
- ;;   :ensure t
- ;;   :hook (prog-mode . highlight-operators-mode))
-
- ;; (use-package highlight-escape-sequences
- ;;   :ensure t
- ;;   :hook (prog-mode . hes-mode))
+ (use-package highlight-escape-sequences
+   :ensure t
+   :hook (prog-mode . hes-mode))

@@ -58,7 +58,8 @@
       ;; prog-mode major-mode
       (add-hook 'ess-mode-hook 'spacemacs/run-prog-mode-hooks)
       (when (configuration-layer/package-usedp 'company)
-          (add-hook 'ess-mode-hook 'company-mode))))
+        (add-hook 'ess-mode-hook 'company-mode)
+        (add-hook 'inferior-ess-mode-hook 'company-mode))))
 
   ;; R --------------------------------------------------------------------------
   (setq spacemacs/ess-config
