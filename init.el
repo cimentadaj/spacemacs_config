@@ -32,6 +32,7 @@ values."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
+     nginx
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
@@ -46,6 +47,7 @@ values."
      better-defaults
      emacs-lisp
      shell-scripts
+     (shell :variables shell-default-shell 'eshell)
      git
      markdown
      org
@@ -71,6 +73,7 @@ values."
      html
      yaml
      docker
+     tmux
      ;; version-control
      ;; ess
      latex
@@ -407,6 +410,26 @@ you should place your code here."
   (all-the-icons-ivy-rich-mode 1)
   (ivy-rich-mode 1)
 
+
+  (add-hook 'shell-mode-hook 'company-mode)
+  
+  ;; ;; Enable solaire-mode anywhere it can be enabled
+  ;; (solaire-global-mode +1)
+  ;; (solaire-mode-swap-bg)
+
+  ;; ;; To enable solaire-mode unconditionally for certain modes:
+  ;; (add-hook 'ediff-prepare-buffer-hook #'solaire-mode)
+
+  ;; ;; ...if you use auto-revert-mode, this prevents solaire-mode from turning
+  ;; ;; itself off every time Emacs reverts the file
+  ;; (add-hook 'after-revert-hook #'turn-on-solaire-mode)
+
+  ;; ;; highlight the minibuffer when it is activated:
+  ;; (add-hook 'minibuffer-setup-hook #'solaire-mode-in-minibuffer)
+
+  ;; ;; NOTE: This is necessary for themes in the doom-themes package!
+  ;; (solaire-mode-swap-bg)
+
   ;; Start emacs with full screen
   ;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
@@ -442,7 +465,12 @@ you should place your code here."
   (find-file "~/google_drive/gtd/inbox.org")
 
   ;; For evaluation emacs-lisp code chunk in org mode
-  (define-key 'org-mode-map (kbd "M-n") 'eval-region)
+  ;; (define-key 'org-mode-map (kbd "M-n") 'eval-region)
+
+  (with-eval-after-load 'sh-script
+    (define-key sh-mode-map (kbd "C-c C-b") 'executable-interpret))
+
+  (define-key emacs-lisp-mode-map (kbd "C-c C-v") 'describe-function)
 
   (custom-set-faces
    '(company-tooltip-common
@@ -492,7 +520,7 @@ you should place your code here."
    "with_defaults(trailing_blank_lines_linter = NULL, object_usage_linter = NULL)")
  '(package-selected-packages
    (quote
-    (all-the-icons-ivy-rich shrink-path doom-dracula-theme highlight-escape-sequences highlight-operators all-the-icons-dired all-the-icons-ivy doom-modeline solaire-mode doom-custom-theme memoize all-the-icons doom-modeline-theme insert-shebang fish-mode company-shell powerline poly-noweb poly-markdown org-category-capture alert log4e gntp org-plus-contrib magit-popup hydra lv dash-functional parent-mode helm helm-core haml-mode flx highlight magit git-commit smartparens iedit anzu evil goto-chg undo-tree ctable ess pyvenv highlight-indentation with-editor exec-path-from-shell polymode deferred request anaphora websocket transient tablist json-mode docker-tramp json-snatcher json-reformat projectile pkg-info epl counsel swiper ivy web-completion-data pos-tip company markdown-mode rust-mode bind-map bind-key yasnippet packed auctex async spinner anaconda-mode pythonic f s avy auto-complete popup flyspell-correct flycheck helm-themes helm-swoop helm-mode-manager helm-flx helm-descbinds ace-jump-helm-line yapfify yaml-mode xterm-color ws-butler winum which-key wgrep web-mode volatile-highlights vi-tilde-fringe uuidgen use-package unfill toml-mode toc-org thrift tagedit stan-mode spaceline solarized-theme smex smeargle slim-mode shell-pop scss-mode scad-mode sass-mode restart-emacs rainbow-delimiters racer qml-mode pytest pyenv-mode py-isort pug-mode popwin poly-R pip-requirements persp-mode pcre2el paradox orgit org-projectile org-present org-pomodoro org-mime org-download org-bullets open-junk-file neotree mwim multi-term move-text mmm-mode matlab-mode markdown-toc magit-gitflow macrostep lorem-ipsum live-py-mode linum-relative link-hint julia-mode ivy-hydra indent-guide hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers helm-projectile helm-make helm-ag google-translate golden-ratio gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy flyspell-correct-ivy flycheck-rust flycheck-pos-tip flx-ido fill-column-indicator fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu ess-smart-equals ess-R-data-view eshell-z eshell-prompt-extras esh-help emmet-mode elpy elisp-slime-nav ein dumb-jump doom-themes dockerfile-mode docker diminish define-word cython-mode csv-mode counsel-projectile company-web company-statistics company-quickhelp company-auctex company-anaconda column-enforce-mode clean-aindent-mode cargo auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile auctex-latexmk arduino-mode aggressive-indent adaptive-wrap ace-window ace-link ac-ispell))))
+    (nginx-mode all-the-icons-ivy-rich shrink-path doom-dracula-theme highlight-escape-sequences highlight-operators all-the-icons-dired all-the-icons-ivy doom-modeline solaire-mode doom-custom-theme memoize all-the-icons doom-modeline-theme insert-shebang fish-mode company-shell powerline poly-noweb poly-markdown org-category-capture alert log4e gntp org-plus-contrib magit-popup hydra lv dash-functional parent-mode helm helm-core haml-mode flx highlight magit git-commit smartparens iedit anzu evil goto-chg undo-tree ctable ess pyvenv highlight-indentation with-editor exec-path-from-shell polymode deferred request anaphora websocket transient tablist json-mode docker-tramp json-snatcher json-reformat projectile pkg-info epl counsel swiper ivy web-completion-data pos-tip company markdown-mode rust-mode bind-map bind-key yasnippet packed auctex async spinner anaconda-mode pythonic f s avy auto-complete popup flyspell-correct flycheck helm-themes helm-swoop helm-mode-manager helm-flx helm-descbinds ace-jump-helm-line yapfify yaml-mode xterm-color ws-butler winum which-key wgrep web-mode volatile-highlights vi-tilde-fringe uuidgen use-package unfill toml-mode toc-org thrift tagedit stan-mode spaceline solarized-theme smex smeargle slim-mode shell-pop scss-mode scad-mode sass-mode restart-emacs rainbow-delimiters racer qml-mode pytest pyenv-mode py-isort pug-mode popwin poly-R pip-requirements persp-mode pcre2el paradox orgit org-projectile org-present org-pomodoro org-mime org-download org-bullets open-junk-file neotree mwim multi-term move-text mmm-mode matlab-mode markdown-toc magit-gitflow macrostep lorem-ipsum live-py-mode linum-relative link-hint julia-mode ivy-hydra indent-guide hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers helm-projectile helm-make helm-ag google-translate golden-ratio gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy flyspell-correct-ivy flycheck-rust flycheck-pos-tip flx-ido fill-column-indicator fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu ess-smart-equals ess-R-data-view eshell-z eshell-prompt-extras esh-help emmet-mode elpy elisp-slime-nav ein dumb-jump doom-themes dockerfile-mode docker diminish define-word cython-mode csv-mode counsel-projectile company-web company-statistics company-quickhelp company-auctex company-anaconda column-enforce-mode clean-aindent-mode cargo auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile auctex-latexmk arduino-mode aggressive-indent adaptive-wrap ace-window ace-link ac-ispell))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

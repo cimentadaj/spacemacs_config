@@ -20,6 +20,13 @@
     ;; faster send
     (advice-add #'python-shell-buffer-substring :around #'pythonp//no-python-mode-hook-advice)
 
+
+    (setq python-shell-interpreter "ipython"
+          python-shell-interpreter-args "-i --simple-prompt"
+          ;; python-shell-interpreter-args "-i"
+          elpy-rpc-python-command "python3"
+          python-indent-offset 4)
+
     ;; add the bindings
     (spacemacs/declare-prefix-for-mode 'python-mode "me" "send to REPL")
     (spacemacs/declare-prefix-for-mode 'python-mode "ms" "send to REPL and step")
@@ -71,8 +78,35 @@
       "Python - Insert = operator"
       (interactive)
       (insert " = "))
+
+    (defun assign_comment ()
+      "Python - Insert = operator"
+      (interactive)
+      (insert "# "))
+
+
     (define-key python-mode-map (kbd "C-<") 'assign_python_operator)
     (define-key inferior-python-mode-map (kbd "C-<") 'assign_python_operator)
+    (define-key python-mode-map (kbd "C->") 'assign_comment)
+
+    (defun py-eval-region-or-line-and-step ()
+      (interactive)
+      (if (and transient-mark-mode mark-active
+               (> (region-end) (region-beginning)))
+          (elpy-shell-send-region-or-buffer)
+          (elpy-shell-send-statement-and-step)))
+
+    (define-key python-mode-map (kbd "<C-return>") 'py-eval-region-or-line-and-step)
+    (define-key python-mode-map (kbd "C-c C-b") 'elpy-shell-send-buffer)
+
+    (define-key python-mode-map (kbd "C-c C-e C-r") 'pyvenv-restart-python)
+    (define-key inferior-python-mode-map (kbd "C-c C-e C-r") 'pyvenv-restart-python)
+
+
+
+    (require 'elpy)
+    (define-key python-mode-map (kbd "C-c C-v") 'elpy-doc)
+    (define-key inferior-python-mode-map (kbd "C-c C-v") 'elpy-doc)
 
     ;; toggles
     (spacemacs/declare-prefix-for-mode 'python-mode "mt" "toggles")

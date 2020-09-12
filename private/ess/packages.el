@@ -147,6 +147,7 @@
       ;; Shiny
       "Sr" 'tide-shiny-run-app
       )
+
     (define-key ess-mode-map (kbd "<s-return>") 'ess-eval-line)
     ;; (define-key inferior-ess-mode-map (kbd "C-j") 'comint-next-input)
     ;; (define-key inferior-ess-mode-map (kbd "C-k") 'comint-previous-input)
@@ -187,7 +188,21 @@
     (define-key ess-mode-map (kbd "C-<") 'tide-insert-assign)
     (define-key inferior-ess-mode-map (kbd "C->") 'tide-insert-pipe)
     (define-key inferior-ess-mode-map (kbd "C-<") 'tide-insert-assign)
+    (define-key ess-mode-map (kbd "<C-return>") 'ess-eval-region-or-function-or-paragraph-and-step)
 
+
+    ;; (defun ess-eval-line-function-or-paragraph (&optional vis)
+    ;;   "Send the current function if \\[point] is inside one.
+    ;;   Otherwise send the current paragraph to the inferior ESS process.
+    ;;   Prefix arg VIS toggles visibility of ess-code as for
+    ;;   `ess-eval-region'. Returns 'function if a function was evaluated
+    ;;   or 'paragraph if a paragraph."
+    ;;   (interactive "P")
+    ;;   (condition-case nil
+    ;;       (progn
+    ;;         (ess-eval-line vis) 'line
+    ;;         (ess-eval-function vis) 'function
+    ;;         (ess-eval-paragraph vis) 'paragraph)))
 
     (defun tide-draft-rmd ()
       "Draft a new Rmd file from a template interactively."

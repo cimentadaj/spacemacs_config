@@ -34,3 +34,10 @@
 (bind-key "M-i" #'company-complete)
 
 (defalias 'list-buffers 'ibuffer)
+
+(global-set-key (kbd "C-/") 'undo)
+;; make ctrl-Z redo
+(defalias 'redo 'undo-tree-redo)
+(global-set-key (kbd "C-S-/") 'redo)
+
+;;; keybindings.el ends here

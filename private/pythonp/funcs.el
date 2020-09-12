@@ -79,6 +79,13 @@ indentation levels."
     (re-search-forward "[^ 	\n]")
     (goto-char (- (point) 1))))
 
+(defun elpy-shell-restart-and-send-region-or-buffer ()
+  "Send the region of buffer after restarting the shell."
+  (interactive)
+  (elpy-shell-kill t)
+  (elpy-shell-send-region-or-buffer))
+
+
 ;; -- search project for definitions -------------------------------------------
 
 (defun pythonp//ivy--regex-fuzzy-restricted (str forbidden-chars)

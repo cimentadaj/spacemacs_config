@@ -28,7 +28,8 @@
 (setq ess-eval-visibly t)
 
 (setq ess-default-style 'RStudio)
-(setq tab-always-indent 'complete)
+;; (setq tab-always-indent 'complete)
+;; (setq-local comment-indent-function #'ess-calculate-indent)
 
 (add-hook 'inferior-ess-mode-hook
           '(lambda nil
@@ -47,3 +48,4 @@
 (setq comint-scroll-to-bottom-on-input t)
 (setq comint-scroll-to-bottom-on-output t)
 (setq comint-move-point-for-output t)
+(setq ess-indent-with-fancy-comments nil)
