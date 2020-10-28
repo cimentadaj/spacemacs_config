@@ -1,0 +1,10 @@
+[flake8]
+
+# Depending on what the flycheck engine is running, you have to exclude from this file or from
+# pylintrc. For my case, pylint seems to be the one excluding the checks (that is, running in flycheck)
+# so exclude from .pylintrc rather than this file.
+
+# C0115 = Missing class docstring
+ignore = C0115
+exclude = .git,__pycache__,docs/source/conf.py,old,build,dist,node_modules,instance
+

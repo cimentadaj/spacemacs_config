@@ -489,6 +489,9 @@ you should place your code here."
 
   (define-key emacs-lisp-mode-map (kbd "C-c C-v") 'describe-function)
 
+  (setq flycheck-flake8rc "~/.spacemacs.d/private/pythonp/.flake8")
+  (setq flycheck-pylintrc "~/.spacemacs.d/private/pythonp/.pylintrc")
+
   (setq company-auto-complete 'company-explicit-action-p)
 
   (custom-set-faces

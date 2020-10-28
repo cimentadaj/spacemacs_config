@@ -1,0 +1,12 @@
+[MASTER]
+
+# The first time I was trying to exclude some checks from flake8/pylint I was putting all the exclusions
+# in flake8 but noticed that none were being excluded. After a while I figure that it was pylint that
+# was running and I have to put all check exclusions here.
+
+# C0114 missing-module-docstring
+# C0115 = Missing class docstring
+disable=C0114,C0115
+
+# This ignores directories/files
+ignore=.git,__pycache__,docs/source/conf.py,old,build,dist,node_modules,instance
