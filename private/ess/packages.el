@@ -184,6 +184,18 @@
       (interactive)
       (insert " <- "))
 
+    (defun ess-comint-clean-buffer ()
+      "Applies comint-clear-buffer to the inferior process
+       from a buffer. If you're in buffer '*a*' and run this
+       it will switch to the associated inferior buffer apply
+       commint-clear-buffer and switch back to *a*"
+      (interactive)
+      (let ((first-buffer (current-buffer)))
+        (ess-switch-to-inferior-or-script-buffer t)
+        (comint-clear-buffer)
+        (switch-to-buffer-other-window first-buffer)))
+
+    (define-key ess-mode-map (kbd "C-c M-o") 'ess-comint-clean-buffer)
     (define-key ess-mode-map (kbd "C->") 'tide-insert-pipe)
     (define-key ess-mode-map (kbd "C-<") 'tide-insert-assign)
     (define-key inferior-ess-mode-map (kbd "C->") 'tide-insert-pipe)
@@ -372,8 +384,6 @@
   (eval-after-load "ess-julia" spacemacs/ess-config))
 
 
-
-
 (defun ess/init-ess-R-data-view ())
 
 (defun ess/init-ess-smart-equals ()
@@ -423,3 +433,5 @@
         (R)
         (set-window-buffer w2 "*R*")
         (set-window-buffer w1 w1name))))
+
+
