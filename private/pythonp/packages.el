@@ -85,6 +85,18 @@
       (insert "# "))
 
 
+    (defun elpy-comint-clear-buffer ()
+      "Applies comint-clear-buffer to the inferior process
+       associated with a buffer. If you're in buffer '*a*' and run this,
+       it will switch to the associated inferior buffer apply
+       comint-clear-buffer and switch back to *a*"
+      (interactive)
+      (let ((first-buffer (current-buffer)))
+        (elpy-shell-switch-to-shell)
+        (comint-clear-buffer)
+        (switch-to-buffer-other-window first-buffer)))
+
+    (define-key python-mode-map (kbd "C-c M-o") 'elpy-comint-clear-buffer)
     (define-key python-mode-map (kbd "C-<") 'assign_python_operator)
     (define-key inferior-python-mode-map (kbd "C-<") 'assign_python_operator)
     (define-key python-mode-map (kbd "C->") 'assign_comment)
