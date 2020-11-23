@@ -201,6 +201,7 @@
     (define-key inferior-ess-mode-map (kbd "C->") 'tide-insert-pipe)
     (define-key inferior-ess-mode-map (kbd "C-<") 'tide-insert-assign)
     (define-key ess-mode-map (kbd "<C-return>") 'ess-eval-region-or-function-or-paragraph-and-step)
+    (define-key ess-mode-map (kbd "C-j") 'ess-eval-line-and-step)
     (define-key ess-mode-map (kbd "C-c C-p") 'run-ess-r)
 
 

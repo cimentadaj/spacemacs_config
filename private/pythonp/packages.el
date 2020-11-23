@@ -96,6 +96,24 @@
         (comint-clear-buffer)
         (switch-to-buffer-other-window first-buffer)))
 
+    (defun elpy-set-working-directory (path &optional no-error)
+      "Set the current working to PATH for the elpy buffer and Python process."
+      (interactive "DChange working directory to: ")
+      (if ess-setwd-command
+          (let* ((remote (file-remote-p path))
+                 (path (if remote
+                           (progn
+                             (require 'tramp-sh)
+                             (tramp-sh-handle-expand-file-name path))
+                         path))
+                 (lpath (if remote
+                            (with-parsed-tramp-file-name path v v-localname)
+                          path)))
+            (ess-eval-linewise (format ess-setwd-command lpath))
+            (ess-set-process-variable 'default-directory
+                                      (file-name-as-directory path)))))
+
+
     (define-key python-mode-map (kbd "C-c M-o") 'elpy-comint-clear-buffer)
     (define-key python-mode-map (kbd "C-<") 'assign_python_operator)
     (define-key inferior-python-mode-map (kbd "C-<") 'assign_python_operator)
@@ -110,11 +128,32 @@
 
     (define-key python-mode-map (kbd "<C-return>") 'py-eval-region-or-line-and-step)
     (define-key python-mode-map (kbd "C-c C-b") 'elpy-shell-send-buffer)
-
     (define-key python-mode-map (kbd "C-c C-e C-r") 'pyvenv-restart-python)
     (define-key inferior-python-mode-map (kbd "C-c C-e C-r") 'pyvenv-restart-python)
 
+    (defun elpy-set-working-directory (path &optional no-error)
+      "Set the current working to PATH for the elpy buffer and Python process."
+      (interactive "DChange working directory to: ")
+      (let* ((remote (file-remote-p path))
+             (path (if remote
+                       (progn
+                         (require 'tramp-sh)
+                         (tramp-sh-handle-expand-file-name path))
+                     path))
+             (lpath (if remote
+                        (with-parsed-tramp-file-name path v v-localname)
+                      path)))
+        (python-shell-send-string
+         (format "import os; os.chdir('%s'); del os" path))
+        (elpy-shell--append-to-shell-output (format "import os; os.chdir('%s'); del os" path))
+        ))
 
+    (define-key python-mode-map (kbd "C-c C-. d") 'elpy-set-working-directory)
+    (define-key inferior-python-mode-map (kbd "C-c C-. d") 'elpy-set-working-directory)
+
+    ;; (defun my-run-python ()
+    ;;   (interactive)
+    ;;   (run-python nil nil 't))
 
     (require 'elpy)
     (define-key python-mode-map (kbd "C-c C-v") 'elpy-doc)
