@@ -75,12 +75,12 @@ values."
      html
      yaml
      docker
+     blog
      tmux
      c-c++
      ;; (scala :variables
      ;;        scala-backend 'scala-metals)
      ;; version-control
-     ;; ess
      latex
      extra-langs
      ;; private layers
