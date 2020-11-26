@@ -19,7 +19,7 @@
   my_new_post <- function(title, ...) {
 
   title_change <- trimws(gsub('[[:punct:]]', '', title))
-  slug <- stringr::str_to_lower(gsub('\\\\\\\\s','-', title_change))
+  slug <- stringr::str_to_lower(gsub(' +','-', title_change))
 
   dir <- paste0(lubridate::today(), '-', slug)
 
@@ -44,12 +44,22 @@ all the necessary folders in between. Finally, it opens the file as a new buffer
     (shell-command (concat entire-expression "> /tmp/log.txt"))
     (with-temp-buffer
       (insert-file-contents "/tmp/log.txt")
+      (shell-command "rm -rf /tmp/log.txt")
       (forward-line 2)
       (delete-char 5)
-      (mwim-end-of-line)
+      (end-of-line 1)
       (backward-delete-char-untabify 1)
-      (mwim-beginning-of-line)
-      (kill-line)
-      (shell-command "rm -rf /tmp/log.txt")
-      (find-file (concat (find-blog) "/" (car kill-ring))))
-    ))
+      (beginning-of-line 1)
+      (kill-line))
+    (find-file (concat (find-blog) "/" (car kill-ring)))))
+
+;; (find-file "/home/jorge/repositories/cimentadaj.github.io/content/blog/2020-11-26-what-ever/2020-11-26-what-ever.Rmd")
+
+;; (find-file "/home/jorge/repositories/cimentadaj.github.io/content/blog/2020-11-26-what-ever/2020-11-26-what-ever.Rmd")
+
+(blog/new-blog-post-blogdown)
+
+;; (find-file "/home/jorge/repositories/cimentadaj.github.io/content/blog/2020-11-26-what-ever/2020-11-26-what-ever.md")
+
+
+;;; funcs.el ends here

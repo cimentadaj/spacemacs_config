@@ -75,7 +75,6 @@ values."
      html
      yaml
      docker
-     blog
      tmux
      c-c++
      ;; (scala :variables
@@ -91,6 +90,7 @@ values."
           ess-enable-smartparens t
           ess-r-backend 'lsp)
      funk
+     blog
      polymode
      )
    ;; List of additional packages that will be installed without being
@@ -479,7 +479,7 @@ you should place your code here."
   (add-hook 'prog-mode-hook #'whitespace-mode)
 
   ;; Open up first file as inbox
-  (find-file "~/google_drive/gtd/inbox.org")
+  ;; (find-file "~/google_drive/gtd/inbox.org")
 
   ;; For evaluation emacs-lisp code chunk in org mode
   ;; (define-key 'org-mode-map (kbd "M-n") 'eval-region)
