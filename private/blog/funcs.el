@@ -53,4 +53,20 @@ all the necessary folders in between. Finally, it opens the file as a new buffer
       (kill-line))
     (find-file (concat (find-blog) "/" (car kill-ring)))))
 
+(defun blog/preview-blog-post-blogdown ()
+  "Run blogdown::server_site on an R buffer in the directory of the blog."
+  (interactive)
+  ;; Even though default-directory is not directly
+  ;; used, it sets the dir for opening the R session
+  (let* ((default-directory (find-blog))
+         (selected-buffer (current-buffer))
+         (ess-dialect "R"))
+    (ess-eval-linewise "blogdown::serve_site()")))
+
+(defun blog/publish-blog-post-blogdown ()
+  "Publishes the website using the script public_update.sh."
+  (interactive)
+  (let ((default-directory (find-blog)))
+    (compile "bash public_update.sh")))
+
 ;;; funcs.el ends here
