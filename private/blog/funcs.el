@@ -53,13 +53,4 @@ all the necessary folders in between. Finally, it opens the file as a new buffer
       (kill-line))
     (find-file (concat (find-blog) "/" (car kill-ring)))))
 
-;; (find-file "/home/jorge/repositories/cimentadaj.github.io/content/blog/2020-11-26-what-ever/2020-11-26-what-ever.Rmd")
-
-;; (find-file "/home/jorge/repositories/cimentadaj.github.io/content/blog/2020-11-26-what-ever/2020-11-26-what-ever.Rmd")
-
-(blog/new-blog-post-blogdown)
-
-;; (find-file "/home/jorge/repositories/cimentadaj.github.io/content/blog/2020-11-26-what-ever/2020-11-26-what-ever.md")
-
-
 ;;; funcs.el ends here
