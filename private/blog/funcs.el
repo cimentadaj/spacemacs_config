@@ -83,6 +83,12 @@ all the necessary folders in between. Finally, it opens the file as a new buffer
   (let ((default-directory (find-blog-blogdown)))
     (compile "bash public_update.sh")))
 
+(defun blog/open-blog-blogdown ()
+  "Open up personal blogdown"
+  (interactive)
+  (browse-url "https://cimentadaj.github.io/"))
+
+
 ;;; Persona blog functions
 
 (defun find-blog-personal ()
@@ -162,6 +168,11 @@ See find-blog-blogdown comments inside the function for greater details."
   (interactive)
   (let ((default-directory (find-blog-personal)))
     (compile "git add .; git commit -m 'New blog post'; git push; ssh root@165.22.201.250 'cd /var/www/blog.cimentada.org/html; git pull'")))
+
+(defun blog/open-blog-personal ()
+  "Open up personal blog"
+  (interactive)
+  (browse-url "https://blog.cimentada.org/"))
 
 
 ;;; funcs.el ends here
