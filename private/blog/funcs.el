@@ -117,7 +117,9 @@ See find-blog-blogdown comments inside the function for greater details."
             <p>" (blog-timestamp) "</p>
             <hr>
             <p style='text-align:left'>
+               <span style='white-space: pre-line'>
 
+               <\span>
             </p>
         </body>
     </center>
