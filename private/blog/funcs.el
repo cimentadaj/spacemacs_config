@@ -6,9 +6,9 @@
 
 ;;; Helper functions
 
-;;; Remember to set the locale to English inside
 (defun blog-timestamp ()
   "Return date and timestamp as string."
+  (setq system-time-locale "C")
   (format-time-string "%d of %B, %Y - %H:%M"))
 
 (defun indent-buffer ()
@@ -88,8 +88,7 @@ all the necessary folders in between. Finally, it opens the file as a new buffer
   (interactive)
   (browse-url "https://cimentadaj.github.io/"))
 
-
-;;; Persona blog functions
+;;; Personal blog functions
 
 (defun find-blog-personal ()
   "Return the local directory of the personal blog.
@@ -167,7 +166,7 @@ See find-blog-blogdown comments inside the function for greater details."
   "Publishes the website by pushing the blog post to GH and then pulling from the remote."
   (interactive)
   (let ((default-directory (find-blog-personal)))
-    (compile "git add .; git commit -m 'New blog post'; git push; ssh root@165.22.201.250 'cd /var/www/blog.cimentada.org/html; git pull'")))
+    (compile "git add .; git commit -m 'New blog post'; git push; ssh root@personal_server 'cd /var/www/blog.cimentada.org/html; git pull'")))
 
 (defun blog/open-blog-personal ()
   "Open up personal blog"
