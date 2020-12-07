@@ -114,7 +114,7 @@ See find-blog-blogdown comments inside the function for greater details."
         </head>
         <body>
             <h1 class='title'>" (capitalize blog-title) "</h1>
-            <p>" (blog-timestamp) "</p>
+            <p style='text-align:left'>" (blog-timestamp) "</p>
             <hr>
             <p>  </p>
         </body>
