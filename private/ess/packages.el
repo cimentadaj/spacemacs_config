@@ -10,12 +10,12 @@
 ;;; License: GPLv3
 
 (setq ess-packages
-  '(
-    ess
-    ess-R-data-view
-    ess-smart-equals
-    golden-ratio
-    org))
+      '(
+        ess
+        ess-smart-equals
+        golden-ratio
+        org
+        julia-mode))
 
 (defun ess/init-ess ()
   (use-package ess-site
@@ -59,7 +59,9 @@
       (add-hook 'ess-mode-hook 'spacemacs/run-prog-mode-hooks)
       (when (configuration-layer/package-usedp 'company)
         (add-hook 'ess-mode-hook 'company-mode)
-        (add-hook 'inferior-ess-mode-hook 'company-mode))))
+        (add-hook 'ess-julia-mode-hook 'company-mode)
+        (add-hook 'inferior-ess-mode-hook 'company-mode)
+        (add-hook 'inferior-ess-julia-mode-hook 'company-mode))))
 
   ;; R --------------------------------------------------------------------------
   (setq spacemacs/ess-config
@@ -175,10 +177,12 @@
     ;; =====================================================================
     ;; Tidyverse IDE
     ;; =====================================================================
+
     (defun tide-insert-pipe ()
       "Insert a %>% and newline"
       (interactive)
       (insert " %>% "))
+
     (defun tide-insert-assign ()
       "Insert an assignment <-"
       (interactive)
@@ -196,13 +200,13 @@
         (switch-to-buffer-other-window first-buffer)))
 
     (define-key ess-mode-map (kbd "C-c M-o") 'ess-comint-clean-buffer)
-    (define-key ess-mode-map (kbd "C->") 'tide-insert-pipe)
-    (define-key ess-mode-map (kbd "C-<") 'tide-insert-assign)
-    (define-key inferior-ess-mode-map (kbd "C->") 'tide-insert-pipe)
-    (define-key inferior-ess-mode-map (kbd "C-<") 'tide-insert-assign)
+    (define-key ess-r-mode-map (kbd "C->") 'tide-insert-pipe)
+    (define-key ess-r-mode-map (kbd "C-<") 'tide-insert-assign)
+    (define-key inferior-ess-r-mode-map (kbd "C->") 'tide-insert-pipe)
+    (define-key inferior-ess-r-mode-map (kbd "C-<") 'tide-insert-assign)
     (define-key ess-mode-map (kbd "<C-return>") 'ess-eval-region-or-function-or-paragraph-and-step)
     (define-key ess-mode-map (kbd "C-j") 'ess-eval-line-and-step)
-    (define-key ess-mode-map (kbd "C-c C-p") 'run-ess-r)
+    (define-key ess-r-mode-map (kbd "C-c C-p") 'run-ess-r)
 
 
     ;; (defun ess-eval-line-function-or-paragraph (&optional vis)
@@ -385,8 +389,6 @@
   (eval-after-load "ess-julia" spacemacs/ess-config))
 
 
-(defun ess/init-ess-R-data-view ())
-
 (defun ess/init-ess-smart-equals ()
   (use-package ess-smart-equals
     :defer t
@@ -407,6 +409,52 @@
 (defun ess/pre-init-org ()
   (spacemacs|use-package-add-hook org
     :post-config (add-to-list 'org-babel-load-languages '(R . t))))
+
+(defun ess/init-julia-mode ()
+
+  (defun tide-insert-assign-equal ()
+    "Insert an assignment ="
+    (interactive)
+    (insert " = "))
+
+  (defun tide-insert-pipe-alternative ()
+    "Insert an assignment |>"
+    (interactive)
+    (insert " |> "))
+
+  (use-package julia-mode
+    :init
+    ;; Notice that I'm putting ess-julia-mode rather than julia-mode.
+    ;; This is because I want all julia files to have ess-julia-mode and
+    ;; julia-mode keeps creeping up first in the auto-mode-alist, effectively
+    ;; overriding ess-julia-mode from ESS. Based on https://emacs.stackexchange.com/questions/38573/dissasociate-auto-mode-for-specific-files-in-ess
+    ;; I came up with this solution here.
+    (push '("\\.jl\\'" . ess-julia-mode) auto-mode-alist)
+    (delete-dups auto-mode-alist)
+
+    ;; This binds the two key bindings to ess-julia-mode and inferior-ess-julia-mode.
+    ;; It seems that julia-mode is the parent of ess-julia-mode and every customization
+    ;; needs to happen to julia-mode RATHEr than ess-julia-mode. You spent quite a lot of time
+    ;; trying to figure out how to set the key binding to work with ess-julia-mode and
+    ;; figure out that they need to be at julia-mode rather than ess-julia-mode.
+    :bind (("C-<" . tide-insert-assign-equal)
+           ("C->" . tide-insert-pipe-alternative)))
+
+  ;; (setq comint-output-filter-functions
+  ;;       (remove 'ansi-color-process-output comint-output-filter-functions))
+
+  ;; (add-hook 'inferior-julia-mode-hook
+  ;;           (lambda ()
+  ;;             ;; Disable font-locking in this buffer to improve performance
+  ;;             (font-lock-mode -1)
+  ;;             ;; Prevent font-locking from being re-enabled in this buffer
+  ;;             (make-local-variable 'font-lock-function)
+  ;;             (setq font-lock-function (lambda (_) nil))
+  ;;             (add-hook 'comint-preoutput-filter-functions 'xterm-color-filter nil t)))
+
+  (setq inferior-julia-args "--color=yes")
+
+  )
 
 (defun R-scratch ()
   (interactive)
@@ -434,5 +482,4 @@
         (R)
         (set-window-buffer w2 "*R*")
         (set-window-buffer w1 w1name))))
-
 
