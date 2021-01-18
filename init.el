@@ -93,17 +93,13 @@ values."
      funk
      blog
      polymode
+     themes
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(doom-modeline
-                                      all-the-icons
-                                      all-the-icons-ivy-rich
-                                      all-the-icons-dired
-                                      solaire-mode
-                                      ivy-rich
+   dotspacemacs-additional-packages '(ivy-rich
                                       expand-region
                                       helm-projectile
                                       helm-ag
@@ -117,7 +113,8 @@ values."
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
-   dotspacemacs-excluded-packages '()
+   dotspacemacs-excluded-packages '(
+                                    spaceline)
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
    ;; unused packages as well as their unused dependencies.
@@ -407,28 +404,8 @@ you should place your code here."
                 tramp-file-name-regexp))
   (setq tramp-verbose 1)
 
-  (setq-default
-   ;; doom-modeline
-   inhibit-compacting-font-caches t
-   doom-modeline-buffer-file-name-style 'relative-from-project
-   doom-modeline-bar-width 1
-   doom-modeline-modal-icon nil
-   doom-modeline-height 15
-   doom-modeline-env-python-executable "python3"
-   ;; all-the-icons
-   all-the-icons-scale-factor 1.0
-   all-the-icons-install-fonts
-   )
-
   ;; Custom doom-modeline
-  (doom-modeline-mode 1)
-
-  (when (member "Menlo" (font-family-list))
-    (set-face-attribute 'mode-line nil :height 110 :font "Menlo")
-    (set-face-attribute 'mode-line-inactive nil :height 110 :font "Menlo"))
-
-  (all-the-icons-ivy-rich-mode 1)
-  (ivy-rich-mode 1)
+  ;; (ivy-rich-mode 1)
 
   (add-hook 'shell-mode-hook 'company-mode)
 
@@ -570,7 +547,7 @@ you should place your code here."
      inferior-python-mode-hook
      ))
   ;; Turn on FCI (Fill Column Indicator) mode
-                                        ; (turn-on-fci-mode)
+  ;; (turn-on-fci-mode)
   ;; Maxima mode https://www.emacswiki.org/emacs/MaximaMode
   ;; (add-to-list 'load-path "/usr/local/share/maxima/5.18.1/emacs/")
   (autoload 'maxima-mode "maxima" "Maxima mode" t)
