@@ -453,7 +453,6 @@
   ;;             (add-hook 'comint-preoutput-filter-functions 'xterm-color-filter nil t)))
 
   (setq inferior-julia-args "--color=yes")
-
   )
 
 (defun R-scratch ()
@@ -469,6 +468,21 @@
     (if (not (member "*R*" (mapcar (function buffer-name) (buffer-list))))
         (R))
     (set-window-buffer w2 "*R*")
+    (set-window-buffer w1 w1name)))
+
+(defun julia-scratch ()
+  (interactive)
+  (progn
+    (delete-other-windows)
+    (setq new-buf (get-buffer-create "scratch.jl"))
+    (switch-to-buffer new-buf)
+    (ess-julia-mode)
+    (setq w1 (selected-window))
+    (setq w1name (buffer-name))
+    (setq w2 (split-window w1 nil t))
+    (if (not (member "*julia*" (mapcar (function buffer-name) (buffer-list))))
+        (julia))
+    (set-window-buffer w2 "*julia*")
     (set-window-buffer w1 w1name)))
 
 (defun my-ess--R ()
