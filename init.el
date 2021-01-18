@@ -93,7 +93,13 @@ values."
      funk
      blog
      polymode
-     themes
+     (spacemacs-modeline :variables
+                         inhibit-compacting-font-caches t
+                         doom-modeline-buffer-file-name-style 'relative-from-project
+                         doom-modeline-bar-width 1
+                         doom-modeline-modal-icon nil
+                         doom-modeline-height '15
+                         doom-modeline-env-python-executable "python3")
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -188,6 +194,8 @@ values."
                          leuven
                          monokai
                          zenburn)
+
+   dotspacemacs-mode-line-theme '(doom)
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
@@ -362,7 +370,7 @@ executes.
  This function is mostly useful for variables that need to be set
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
-  )
+)
 
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
@@ -404,8 +412,6 @@ you should place your code here."
                 tramp-file-name-regexp))
   (setq tramp-verbose 1)
 
-  ;; Custom doom-modeline
-  ;; (ivy-rich-mode 1)
 
   (add-hook 'shell-mode-hook 'company-mode)
 
