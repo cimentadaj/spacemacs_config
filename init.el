@@ -85,11 +85,11 @@ values."
      ;; extra-langs
      ;; private layers
      pythonp
-     (ess :variables
-          ;; ess-enable-smart-equals t
-          ess-enable-electric-spacing-r t
-          ess-enable-smartparens t
-          ess-r-backend 'lsp)
+     (essp :variables
+           ;; ess-enable-smart-equals t
+           ess-enable-electric-spacing-r t
+           ess-enable-smartparens t
+           ess-r-backend 'lsp)
      funk
      blog
      polymode

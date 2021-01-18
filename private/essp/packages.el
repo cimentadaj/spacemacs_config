@@ -9,7 +9,7 @@
 ;;
 ;;; License: GPLv3
 
-(setq ess-packages
+(setq essp-packages
       '(
         ess
         ess-smart-equals
@@ -17,7 +17,7 @@
         org
         julia-mode))
 
-(defun ess/init-ess ()
+(defun essp/init-ess ()
   (use-package ess-site
     :mode (("\\.sp\\'"           . S-mode)
            ("/R/.*\\.q\\'"       . R-mode)
@@ -389,7 +389,7 @@
   (eval-after-load "ess-julia" spacemacs/ess-config))
 
 
-(defun ess/init-ess-smart-equals ()
+(defun essp/init-ess-smart-equals ()
   (use-package ess-smart-equals
     :defer t
     :if ess-enable-smart-equals
@@ -398,7 +398,7 @@
       (add-hook 'ess-mode-hook 'ess-smart-equals-mode)
       (add-hook 'inferior-ess-mode-hook 'ess-smart-equals-mode))))
 
-(defun ess/pre-init-golden-ratio ()
+(defun essp/pre-init-golden-ratio ()
   (spacemacs|use-package-add-hook golden-ratio
     :post-config
     (dolist (f '(ess-eval-buffer-and-go
@@ -406,11 +406,11 @@
                  ess-eval-line-and-go))
       (add-to-list 'golden-ratio-extra-commands f))))
 
-(defun ess/pre-init-org ()
+(defun essp/pre-init-org ()
   (spacemacs|use-package-add-hook org
     :post-config (add-to-list 'org-babel-load-languages '(R . t))))
 
-(defun ess/init-julia-mode ()
+(defun essp/init-julia-mode ()
 
   (defun tide-insert-assign-equal ()
     "Insert an assignment ="
