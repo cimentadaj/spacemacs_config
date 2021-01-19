@@ -42,11 +42,20 @@ values."
      csv
      ivy
      (auto-completion :variables
-                      auto-completion-enable-help-tooltip 'manual
-                      auto-completion-enable-snippets-in-popup t
+                      auto-completion-return-key-behavior 'complete
+                      auto-completion-tab-key-behavior 'cycle
+                      auto-completion-complete-with-key-sequence nil
+                      auto-completion-complete-with-key-sequence-delay 0.1
+                      auto-completion-minimum-prefix-length 2
+                      auto-completion-idle-delay 0.1
+                      auto-completion-private-snippets-directory nil
+                      auto-completion-enable-help-tooltip nil
                       auto-completion-enable-sort-by-usage t
                       auto-completion-enable-snippets-in-popup t
-                      auto-completion-use-company-box t)
+                      auto-completion-use-company-box nil)
+     ;; (auto-completion :variables
+     ;;                  auto-completion-enable-help-tooltip 'manual
+     ;;                  auto-completion-use-company-box t)
      better-defaults
      emacs-lisp
      shell-scripts
