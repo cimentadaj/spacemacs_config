@@ -93,6 +93,8 @@ values."
      funk
      blog
      polymode
+
+     ;; This adds the doom-modeline that looks so good.
      (spacemacs-modeline :variables
                          inhibit-compacting-font-caches t
                          doom-modeline-buffer-file-name-style 'relative-from-project
@@ -100,6 +102,9 @@ values."
                          doom-modeline-modal-icon nil
                          doom-modeline-height '15
                          doom-modeline-env-python-executable "python3")
+
+     ;; Private layer where I store the doom themes
+     themes
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these

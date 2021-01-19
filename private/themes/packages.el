@@ -7,10 +7,9 @@
       '(
         doom-themes
         solaire-mode
-        doom-modeline
-        all-the-icones
-        all-the-icones-ivy
-        all-the-icones-dired
+        all-the-icons
+        all-the-icons-ivy
+        all-the-icons-dired
         highlight-numbers
         highlight-operators
         highlight-escape-sequences))
@@ -50,24 +49,7 @@
     (solaire-mode-swap-bg)
     (solaire-global-mode +1)))
 
-(defun themes/init-doom-modeline ()
-  (use-package doom-modeline
-    :ensure t
-    :init (doom-modeline-mode 1)
-    :custom
-    (inhibit-compacting-font-caches t)
-    (doom-modeline-buffer-file-name-style 'relative-from-project)
-    (doom-modeline-bar-width 1)
-    (doom-modeline-modal-icon nil)
-    (doom-modeline-height 15)
-    (doom-modeline-env-python-executable "python3")
-    :config
-    (when (member "Menlo" (font-family-list))
-      (set-face-attribute 'mode-line nil :height 110 :font "Menlo")
-      (set-face-attribute 'mode-line-inactive nil :height 110 :font "Menlo")))
-  )
-
-(defun themes/init-all-the-icons ()
+(defun themes/post-init-all-the-icons ()
   (use-package all-the-icons
     :ensure t
     :custom
@@ -87,7 +69,7 @@
     :ensure t
     :hook (dired-mode . all-the-icons-dired-mode)))
 
-(defun themes/init-highlight-numbers ()
+(defun themes/post-init-highlight-numbers ()
   (use-package highlight-numbers
     :ensure t
     :hook (prog-mode . highlight-numbers-mode)))
@@ -101,45 +83,3 @@
   (use-package highlight-escape-sequences
     :ensure t
     :hook (prog-mode . hes-mode)))
-
-;; Taken partially from https://github.com/ianpan870102/.personal-emacs.d/blob/master/init.el
-;; START HERE
-
-;; (use-package spacemacs-common
-;;   :ensure spacemacs-theme
-;;   :custom-face
-;;   (line-number              ((t (:foreground "#414B4f" :background "#282B2E"))))
-;;   (line-number-current-line ((t (:foreground "#616B6f" :background "#282B2E"))))
-;;   (highlight-symbol-face    ((t (:background "#44444f"))))
-;;   :custom
-;;   (spacemacs-theme-comment-bg nil)
-;;   (spacemacs-theme-comment-italic t)
-;;   :config
-;;   (load -theme 'spacemacs-dark t))
-
-;; (use-package centaur-tabs
-;;   :demand
-;;   :bind (("C-S-<tab>" . centaur-tabs-backward)
-;; 	 ("C-<tab>" . centaur-tabs-forward)
-;; 	 ("C-x p" . centaur-tabs-counsel-switch-group))
-;;   :custom
-;;   (centaur-tabs-set-bar 'under)
-;;   (x-underline-at-descent-line t)
-;;   (centaur-tabs-set-modified-marker t)
-;;   (centaur-tabs-modified-marker " ● ")
-;;   (centaur-tabs-cycle-scope 'tabs)
-;;   (centaur-tabs-height 30)
-;;   (centaur-tabs-set-icons t)
-;;   (centaur-tabs-close-button " × ")
-;;   :config
-;;   (centaur-tabs-mode +1)
-;;   (centaur-tabs-headline-match)
-;;   (centaur-tabs-group-by-projectile-project)
-;;   (when (member "Arial" (font-family-list))
-;;     (centaur-tabs-change-fonts "Arial" 130)))
-
-;; (use-package highlight-symbol
-;;   :ensure t
-;;   :hook (prog-mode . highlight-symbol-mode)
-;;   :custom
-;;   (high light-symbol-idle-delay 0.3))
