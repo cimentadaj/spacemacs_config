@@ -317,6 +317,26 @@
       (interactive)
       (ess-eval-linewise "mmmisc::rend()"))
 
+    (defun pos-paragraph ()
+      (backward-paragraph)
+      (next-line 1)
+      (beginning-of-line)
+      (point))
+
+    (defun highlight-piped-region ()
+      (let ((end (point))
+            (beg (pos-paragraph)))
+          (set-mark beg)
+          (goto-char end)
+          (end-of-line)
+          (deactivate-mark)
+          (buffer-substring-no-properties beg (point))))
+
+    (defun run-partial-pipe ()
+      (interactive)
+      (let ((string-to-execute (highlight-piped-region)))
+        (ess-eval-linewise (format "eval(str2lang(gsub('%%>%% *$', '', '%s')))" string-to-execute))))
+
     ;; Data Views
     (defun df-at-point-to-buffer (&optional numrows)
       "output a sample of another data.frame to and jump to buffer."
