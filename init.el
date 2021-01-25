@@ -591,8 +591,8 @@ you should place your code here."
  '(company-begin-commands
    (quote
     (self-insert-command org-self-insert-command orgtbl-self-insert-command c-scope-operator c-electric-colon c-electric-lt-gt c-electric-slash)))
- '(company-idle-delay 0.05)
- '(company-tooltip-idle-delay 0.05)
+ '(company-idle-delay 0.2)
+ '(company-tooltip-idle-delay 4)
  '(ein:output-area-inlined-images t)
  '(evil-want-Y-yank-to-eol nil)
  '(flycheck-lintr-linters
@@ -624,8 +624,8 @@ This function is called at the very end of Spacemacs initialization."
  '(company-begin-commands
    (quote
     (self-insert-command org-self-insert-command orgtbl-self-insert-command c-scope-operator c-electric-colon c-electric-lt-gt c-electric-slash)))
- '(company-idle-delay 0.05)
- '(company-tooltip-idle-delay 0.05)
+ '(company-idle-delay 0.2)
+ '(company-tooltip-idle-delay 4)
  '(ein:output-area-inlined-images t)
  '(evil-want-Y-yank-to-eol nil)
  '(flycheck-lintr-linters
