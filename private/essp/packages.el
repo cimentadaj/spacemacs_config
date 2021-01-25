@@ -341,7 +341,7 @@
         (ess-eval-linewise
          (replace-regexp-in-string
           ".+<-" "" (replace-regexp-in-string
-                     "\\(\\(.\\|\n\\)*\\)\\(%>%\\|\+\\) *$" "\\1" string-to-execute)))))
+                     "\\(\\(.\\|\n\\)*\\)\\(%>%\\|\+\\) *\\'" "\\1" string-to-execute)))))
 
     (define-key ess-mode-map (kbd "<C-S-return>") 'run-partial-pipe)
 
