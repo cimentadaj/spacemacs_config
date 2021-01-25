@@ -15,15 +15,14 @@
     ;; load the elpy-shell definitions
     (require 'elpy-shell)
     (add-hook 'inferior-python-mode-hook 'elpy-shell--enable-output-filter)
+    (add-hook 'python-mode-hook 'elpy-enable)
     (elpy-shell--defun-step-go pythonp/elpy-shell-send-symbol-and-step)
 
     ;; faster send
     (advice-add #'python-shell-buffer-substring :around #'pythonp//no-python-mode-hook-advice)
 
-
     (setq python-shell-interpreter "ipython"
           python-shell-interpreter-args "-i --simple-prompt"
-          ;; python-shell-interpreter-args "-i"
           elpy-rpc-python-command "python3"
           python-indent-offset 4)
 
