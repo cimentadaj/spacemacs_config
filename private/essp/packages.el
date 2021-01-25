@@ -330,12 +330,20 @@
           (goto-char end)
           (end-of-line)
           (deactivate-mark)
-          (buffer-substring-no-properties beg (point))))
+          (setq last-point (point))
+          (goto-char end)
+          (buffer-substring-no-properties beg last-point)))
 
     (defun run-partial-pipe ()
       (interactive)
       (let ((string-to-execute (highlight-piped-region)))
-        (ess-eval-linewise (format "eval(str2lang(gsub('%%>%% *$', '', '%s')))" string-to-execute))))
+        ;; https://stackoverflow.com/questions/65882345/replace-last-occurence-of-regexp-in-a-string-which-has-new-lines-replace-regexp/65882683#65882683
+        (ess-eval-linewise
+         (replace-regexp-in-string
+          ".+<-" "" (replace-regexp-in-string
+                     "\\(\\(.\\|\n\\)*\\)\\(%>%\\|\+\\) *$" "\\1" string-to-execute)))))
+
+    (define-key ess-mode-map (kbd "<C-S-return>") 'run-partial-pipe)
 
     ;; Data Views
     (defun df-at-point-to-buffer (&optional numrows)
