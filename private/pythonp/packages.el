@@ -83,7 +83,6 @@
       (interactive)
       (insert "# "))
 
-
     (defun elpy-comint-clear-buffer ()
       "Applies comint-clear-buffer to the inferior process
        associated with a buffer. If you're in buffer '*a*' and run this,
@@ -154,7 +153,6 @@
     ;;   (interactive)
     ;;   (run-python nil nil 't))
 
-    (require 'elpy)
     (define-key python-mode-map (kbd "C-c C-v") 'elpy-doc)
     (define-key inferior-python-mode-map (kbd "C-c C-v") 'elpy-doc)
 
