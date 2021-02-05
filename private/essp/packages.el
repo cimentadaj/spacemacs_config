@@ -1,3 +1,4 @@
+
 ;; packages.el --- ESS (R) Layer packages File for Spacemacs
 ;;
 ;; Copyright (c) 2012-2017 Sylvain Benner & Contributors
@@ -89,6 +90,7 @@
     (spacemacs/declare-prefix-for-mode 'ess-r-mode "mg" "graphics")
     (spacemacs/declare-prefix-for-mode 'ess-r-mode "mr" "rmarkdown")
     (spacemacs/declare-prefix-for-mode 'ess-r-mode "mS" "shiny")
+    (spacemacs/declare-prefix-for-mode 'ess-r-mode "m/" "extra")
 
     (spacemacs/set-leader-keys-for-major-mode 'ess-julia-mode
       "'"  'julia
@@ -106,17 +108,24 @@
       ;; REPL
       "sB" 'ess-eval-buffer-and-go
       "sb" 'ess-eval-buffer
+      ","  'ess-eval-region-or-function-or-paragraph-and-step
       "e" 'ess-eval-paragraph-and-step
       "f" 'ess-eval-function
       "i" 'ess-interrupt
       "o"  'ess-eval-word
+      "l" 'ess-eval-line
       "R" 'ess-eval-region
       "sp" 'ess-eval-paragraph-and-step
       "sd" 'ess-eval-region-or-line-and-step
-      "sl" 'ess-eval-line
       "sr" 'ess-eval-region
       "st" 'ess-eval-function
       "sw" 'ess-set-working-directory
+      ;; Extra stuff
+      "/c" 'ess-comint-clean-buffer
+      "/r" 'inferior-ess-reload
+      "/e" 'end-of-defun
+      "/a" 'beginning-of-defun
+      "/l" 'ess-load-library
       ;; R data viewers
       "vs" 'df-sample-small
       "vm" 'df-sample-medium
@@ -199,15 +208,11 @@
         (comint-clear-buffer)
         (switch-to-buffer-other-window first-buffer)))
 
-    (define-key ess-mode-map (kbd "C-c M-o") 'ess-comint-clean-buffer)
     (define-key ess-r-mode-map (kbd "C->") 'tide-insert-pipe)
     (define-key ess-r-mode-map (kbd "C-<") 'tide-insert-assign)
     (define-key inferior-ess-r-mode-map (kbd "C->") 'tide-insert-pipe)
     (define-key inferior-ess-r-mode-map (kbd "C-<") 'tide-insert-assign)
-    (define-key ess-mode-map (kbd "<C-return>") 'ess-eval-region-or-function-or-paragraph-and-step)
     (define-key ess-mode-map (kbd "C-j") 'ess-eval-line-and-step)
-    (define-key ess-r-mode-map (kbd "C-c C-p") 'run-ess-r)
-
 
     ;; (defun ess-eval-line-function-or-paragraph (&optional vis)
     ;;   "Send the current function if \\[point] is inside one.
