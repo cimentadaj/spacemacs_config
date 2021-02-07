@@ -29,8 +29,9 @@
     ;; add the bindings
     (spacemacs/declare-prefix-for-mode 'python-mode "me" "send to REPL")
     (spacemacs/declare-prefix-for-mode 'python-mode "ms" "send to REPL and step")
+    (spacemacs/declare-prefix-for-mode 'python-mode "m/" "extra")
     (spacemacs/set-leader-keys-for-major-mode 'python-mode
-      "," 'elpy-shell-send-group-and-step
+      ","  'py-eval-region-or-line-and-step
       "ee" 'elpy-shell-send-statement
       "eE" 'elpy-shell-send-statement-and-go
       "es" 'elpy-shell-send-top-statement
@@ -69,7 +70,16 @@
       "sB" 'elpy-shell-send-buffer-and-step-and-go
       "si" 'elpy-shell-switch-to-shell
       "sI" 'elpy-shell-switch-to-shell-in-current-window
-      "'" 'elpy-shell-switch-to-shell)
+      "'" 'elpy-shell-switch-to-shell
+      ;; Extra stuff
+      "/c" 'elpy-comint-clear-buffer
+      "/r" 'pyvenv-restart-python
+      "/e" 'end-of-defun
+      "/a" 'beginning-of-defun
+      "/l" 'ess-load-library
+      "/w" 'elpy-set-working-directory
+      "/h" 'elpy-doc)
+
     (evil-declare-key 'normal python-mode-map (kbd "<C-return>")
       #'elpy-shell-send-statement-and-step)
 
@@ -112,7 +122,6 @@
                                       (file-name-as-directory path)))))
 
 
-    (define-key python-mode-map (kbd "C-c M-o") 'elpy-comint-clear-buffer)
     (define-key python-mode-map (kbd "C-<") 'assign_python_operator)
     (define-key inferior-python-mode-map (kbd "C-<") 'assign_python_operator)
     (define-key python-mode-map (kbd "C->") 'assign_comment)
@@ -123,11 +132,6 @@
                (> (region-end) (region-beginning)))
           (elpy-shell-send-region-or-buffer)
           (elpy-shell-send-statement-and-step)))
-
-    (define-key python-mode-map (kbd "<C-return>") 'py-eval-region-or-line-and-step)
-    (define-key python-mode-map (kbd "C-c C-b") 'elpy-shell-send-buffer)
-    (define-key python-mode-map (kbd "C-c C-e C-r") 'pyvenv-restart-python)
-    (define-key inferior-python-mode-map (kbd "C-c C-e C-r") 'pyvenv-restart-python)
 
     (defun elpy-set-working-directory (path &optional no-error)
       "Set the current working to PATH for the elpy buffer and Python process."
@@ -145,16 +149,6 @@
          (format "import os; os.chdir('%s'); del os" path))
         (elpy-shell--append-to-shell-output (format "import os; os.chdir('%s'); del os" path))
         ))
-
-    (define-key python-mode-map (kbd "C-c C-. d") 'elpy-set-working-directory)
-    (define-key inferior-python-mode-map (kbd "C-c C-. d") 'elpy-set-working-directory)
-
-    ;; (defun my-run-python ()
-    ;;   (interactive)
-    ;;   (run-python nil nil 't))
-
-    (define-key python-mode-map (kbd "C-c C-v") 'elpy-doc)
-    (define-key inferior-python-mode-map (kbd "C-c C-v") 'elpy-doc)
 
     ;; toggles
     (spacemacs/declare-prefix-for-mode 'python-mode "mt" "toggles")

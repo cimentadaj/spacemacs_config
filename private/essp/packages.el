@@ -119,13 +119,13 @@
       "sd" 'ess-eval-region-or-line-and-step
       "sr" 'ess-eval-region
       "st" 'ess-eval-function
-      "sw" 'ess-set-working-directory
       ;; Extra stuff
       "/c" 'ess-comint-clean-buffer
       "/r" 'inferior-ess-reload
       "/e" 'end-of-defun
       "/a" 'beginning-of-defun
       "/l" 'ess-load-library
+      "/w" 'ess-set-working-directory
       ;; R data viewers
       "vs" 'df-sample-small
       "vm" 'df-sample-medium

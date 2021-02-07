@@ -53,9 +53,6 @@ values."
                       auto-completion-enable-sort-by-usage t
                       auto-completion-enable-snippets-in-popup t
                       auto-completion-use-company-box nil)
-     ;; (auto-completion :variables
-     ;;                  auto-completion-enable-help-tooltip 'manual
-     ;;                  auto-completion-use-company-box t)
      better-defaults
      emacs-lisp
      shell-scripts
@@ -82,16 +79,8 @@ values."
                       syntax-checking-enable-tooltips nil
                       )
      ipython-notebook
-     ;; rust
      yaml
      docker
-     ;; tmux
-     c-c++
-     ;; (scala :variables
-     ;;        scala-backend 'scala-metals)
-     ;; version-control
-     ;; latex
-     ;; extra-langs
      ;; private layers
      pythonp
      (essp :variables
@@ -113,7 +102,7 @@ values."
                          doom-modeline-env-python-executable "python3")
 
      ;; Private layer where I store the doom themes
-     themes
+     ;; themes
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -201,7 +190,8 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(doom-one
+   dotspacemacs-themes '(monokai
+                         doom-one
                          spacemacs-light
                          solarized-dark
                          solarized-light
@@ -217,7 +207,7 @@ values."
    ;; crappy.
    ;; "IBM Plex Mono" or "Source Code Pro"
    dotspacemacs-default-font '("Source Code Pro"
-                               :size 17
+                               :size 13
                                :weight normal
                                :width normal
                                :powerline-scale 1.1)
@@ -427,6 +417,8 @@ you should place your code here."
   (setq tramp-verbose 1)
 
 
+  ;; (setq spacemacs/toggle-fullscreen-frame t)
+
   (add-hook 'shell-mode-hook 'company-mode)
 
   ;; ;; Enable solaire-mode anywhere it can be enabled
@@ -481,6 +473,7 @@ you should place your code here."
   ;; For highlighting in red after 80th column
   (add-hook 'prog-mode-hook #'whitespace-mode)
 
+  (setq dotspacemacs-line-numbers t)
   ;; Open up first file as inbox
   ;; (find-file "~/google_drive/gtd/inbox.org")
 
@@ -501,11 +494,12 @@ you should place your code here."
   (setq flycheck-flake8rc "~/.spacemacs.d/private/pythonp/.flake8")
   (setq flycheck-pylintrc "~/.spacemacs.d/private/pythonp/.pylintrc")
 
+
   ;; Company
   (with-eval-after-load 'company
-    (define-key company-active-map (kbd "M-d") 'company-show-doc-buffer)
-    (define-key company-active-map (kbd "M-m") 'company-select-next)
-    (define-key company-active-map (kbd "M-k") 'company-select-previous))
+    (define-key company-active-map (kbd "C-d") 'company-show-doc-buffer)
+    (define-key company-active-map (kbd "C-j") 'company-select-next)
+    (define-key company-active-map (kbd "C-k") 'company-select-previous))
 
   (require 'ansi-color)
   (defun my-colorize-buffer-window (win)
