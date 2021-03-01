@@ -126,6 +126,7 @@
       "/a" 'beginning-of-defun
       "/l" 'ess-load-library
       "/w" 'ess-set-working-directory
+      "/h" 'ess-display-help-on-object
       ;; R data viewers
       "vs" 'df-sample-small
       "vm" 'df-sample-medium

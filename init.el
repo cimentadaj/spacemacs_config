@@ -75,7 +75,7 @@ values."
                      )
      (syntax-checking :variables
                       flycheck-check-syntax-automatically (quote (save idle-change mode-enabled))
-                      flycheck-idle-change-delay 4 ;; Set delay based on what suits you the best
+                      flycheck-idle-change-delay 5 ;; Set delay based on what suits you the best
                       syntax-checking-enable-tooltips nil
                       )
      ipython-notebook
@@ -374,7 +374,7 @@ executes.
  This function is mostly useful for variables that need to be set
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
-)
+  )
 
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
@@ -496,10 +496,10 @@ you should place your code here."
 
 
   ;; Company
-  (with-eval-after-load 'company
-    (define-key company-active-map (kbd "C-d") 'company-show-doc-buffer)
-    (define-key company-active-map (kbd "C-j") 'company-select-next)
-    (define-key company-active-map (kbd "C-k") 'company-select-previous))
+  ;; (with-eval-after-load 'company
+  ;; (define-key company-active-map (kbd "C-d") 'company-show-doc-buffer)
+  ;; (define-key company-active-map (kbd "C-j") 'company-select-next)
+  ;; (define-key company-active-map (kbd "C-k") 'company-select-previous))
 
   (require 'ansi-color)
   (defun my-colorize-buffer-window (win)
@@ -528,19 +528,14 @@ you should place your code here."
 
   ;; (add-hook 'comint-preoutput-filter-functions 'my-comint-shorten-long-lines)
 
-  (setq company-selection-wrap-around t
-        company-tooltip-align-annotations t
-        company-idle-delay 0.3
-        company-minimum-prefix-length 2
-        company-tooltip-limit 10)
+  ;; (setq company-selection-wrap-around t
+  ;;       company-tooltip-align-annotations t
+  ;;       company-idle-delay 0.6
+  ;;       company-minimum-prefix-length 2
+  ;;       company-tooltip-limit 10)
 
-  (setq company-auto-complete 'company-explicit-action-p)
+  ;; (setq company-auto-complete 'company-explicit-action-p)
 
-  (custom-set-faces
-   '(company-tooltip-common
-     ((t (:inherit company-tooltip :weight bold :underline nil))))
-   '(company-tooltip-common-selection
-     ((t (:inherit company-tooltip-selection :weight bold :underline nil)))))
 
   ;; When scrolling with the cursor, show 4 lines above/below
   (setq scroll-margin 5)
@@ -606,30 +601,30 @@ you should place your code here."
 This is an auto-generated function, do not modify its content directly, use
 Emacs customize menu instead.
 This function is called at the very end of Spacemacs initialization."
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(company-auto-commit t)
- '(company-auto-commit-chars '(32 40 41 46))
- '(company-auto-complete t)
- '(company-auto-complete-chars '(32 40 41 46))
- '(company-begin-commands
-   '(self-insert-command org-self-insert-command orgtbl-self-insert-command c-scope-operator c-electric-colon c-electric-lt-gt c-electric-slash))
- '(company-idle-delay 0.3)
- '(company-tooltip-idle-delay 4)
- '(ein:output-area-inlined-images t)
- '(evil-want-Y-yank-to-eol nil)
- '(flycheck-lintr-linters
-   "with_defaults(trailing_blank_lines_linter = NULL, object_usage_linter = NULL, camel_case_linter = NULL, object_name_linter = NULL, line_length_linter = NULL)")
- '(package-selected-packages
-   '(treemacs-evil evil-easymotion so-long flycheck-julia company-box frame-local ess-smart-equals ess ess-R-data-view julia-repl julia-mode simple-httpd nov phpunit phpcbf php-extras php-auto-yasnippets drupal-mode php-mode impatient-mode org-noter disaster company-c-headers cmake-mode clang-format sql-indent scala-mode sbt-mode noflet dash poly-rst yasnippet-snippets nginx-mode all-the-icons-ivy-rich shrink-path doom-dracula-theme highlight-escape-sequences highlight-operators all-the-icons-dired all-the-icons-ivy doom-modeline solaire-mode doom-custom-theme memoize all-the-icons doom-modeline-theme insert-shebang fish-mode company-shell powerline poly-noweb poly-markdown org-category-capture alert log4e gntp org-plus-contrib magit-popup hydra lv dash-functional parent-mode helm helm-core haml-mode flx highlight magit git-commit smartparens iedit anzu evil goto-chg undo-tree ctable pyvenv highlight-indentation with-editor exec-path-from-shell polymode deferred request anaphora websocket transient tablist json-mode docker-tramp json-snatcher json-reformat projectile pkg-info epl counsel swiper ivy web-completion-data pos-tip company markdown-mode rust-mode bind-map bind-key yasnippet packed auctex async spinner anaconda-mode pythonic f s avy auto-complete popup flyspell-correct flycheck helm-themes helm-swoop helm-mode-manager helm-flx helm-descbinds ace-jump-helm-line yapfify yaml-mode xterm-color ws-butler winum which-key wgrep web-mode volatile-highlights vi-tilde-fringe uuidgen use-package unfill toml-mode toc-org thrift tagedit stan-mode spaceline solarized-theme smex smeargle slim-mode shell-pop scss-mode scad-mode sass-mode restart-emacs rainbow-delimiters racer qml-mode pytest pyenv-mode py-isort pug-mode popwin poly-R pip-requirements persp-mode pcre2el paradox orgit org-projectile org-present org-pomodoro org-mime org-download org-bullets open-junk-file neotree mwim multi-term move-text mmm-mode matlab-mode markdown-toc magit-gitflow macrostep lorem-ipsum live-py-mode linum-relative link-hint ivy-hydra indent-guide hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers helm-projectile helm-make helm-ag google-translate golden-ratio gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy flyspell-correct-ivy flycheck-rust flycheck-pos-tip flx-ido fill-column-indicator fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help emmet-mode elpy elisp-slime-nav ein dumb-jump doom-themes dockerfile-mode docker diminish define-word cython-mode csv-mode counsel-projectile company-web company-statistics company-quickhelp company-auctex company-anaconda column-enforce-mode clean-aindent-mode cargo auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile auctex-latexmk arduino-mode aggressive-indent adaptive-wrap ace-window ace-link ac-ispell)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
- '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil)))))
-)
+  (custom-set-variables
+   ;; custom-set-variables was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   '(company-auto-commit t)
+   '(company-auto-commit-chars '(32 40 41 46))
+   '(company-auto-complete t)
+   '(company-auto-complete-chars '(32 40 41 46))
+   '(company-begin-commands
+     '(self-insert-command org-self-insert-command orgtbl-self-insert-command c-scope-operator c-electric-colon c-electric-lt-gt c-electric-slash))
+   '(company-idle-delay 0.3)
+   '(company-tooltip-idle-delay 4)
+   '(ein:output-area-inlined-images t)
+   '(evil-want-Y-yank-to-eol nil)
+   '(flycheck-lintr-linters
+     "with_defaults(trailing_blank_lines_linter = NULL, object_usage_linter = NULL, camel_case_linter = NULL, object_name_linter = NULL, line_length_linter = NULL)")
+   '(package-selected-packages
+     '(treemacs-evil evil-easymotion so-long flycheck-julia company-box frame-local ess-smart-equals ess ess-R-data-view julia-repl julia-mode simple-httpd nov phpunit phpcbf php-extras php-auto-yasnippets drupal-mode php-mode impatient-mode org-noter disaster company-c-headers cmake-mode clang-format sql-indent scala-mode sbt-mode noflet dash poly-rst yasnippet-snippets nginx-mode all-the-icons-ivy-rich shrink-path doom-dracula-theme highlight-escape-sequences highlight-operators all-the-icons-dired all-the-icons-ivy doom-modeline solaire-mode doom-custom-theme memoize all-the-icons doom-modeline-theme insert-shebang fish-mode company-shell powerline poly-noweb poly-markdown org-category-capture alert log4e gntp org-plus-contrib magit-popup hydra lv dash-functional parent-mode helm helm-core haml-mode flx highlight magit git-commit smartparens iedit anzu evil goto-chg undo-tree ctable pyvenv highlight-indentation with-editor exec-path-from-shell polymode deferred request anaphora websocket transient tablist json-mode docker-tramp json-snatcher json-reformat projectile pkg-info epl counsel swiper ivy web-completion-data pos-tip company markdown-mode rust-mode bind-map bind-key yasnippet packed auctex async spinner anaconda-mode pythonic f s avy auto-complete popup flyspell-correct flycheck helm-themes helm-swoop helm-mode-manager helm-flx helm-descbinds ace-jump-helm-line yapfify yaml-mode xterm-color ws-butler winum which-key wgrep web-mode volatile-highlights vi-tilde-fringe uuidgen use-package unfill toml-mode toc-org thrift tagedit stan-mode spaceline solarized-theme smex smeargle slim-mode shell-pop scss-mode scad-mode sass-mode restart-emacs rainbow-delimiters racer qml-mode pytest pyenv-mode py-isort pug-mode popwin poly-R pip-requirements persp-mode pcre2el paradox orgit org-projectile org-present org-pomodoro org-mime org-download org-bullets open-junk-file neotree mwim multi-term move-text mmm-mode matlab-mode markdown-toc magit-gitflow macrostep lorem-ipsum live-py-mode linum-relative link-hint ivy-hydra indent-guide hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers helm-projectile helm-make helm-ag google-translate golden-ratio gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy flyspell-correct-ivy flycheck-rust flycheck-pos-tip flx-ido fill-column-indicator fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help emmet-mode elpy elisp-slime-nav ein dumb-jump doom-themes dockerfile-mode docker diminish define-word cython-mode csv-mode counsel-projectile company-web company-statistics company-quickhelp company-auctex company-anaconda column-enforce-mode clean-aindent-mode cargo auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile auctex-latexmk arduino-mode aggressive-indent adaptive-wrap ace-window ace-link ac-ispell)))
+  (custom-set-faces
+   ;; custom-set-faces was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
+   '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil)))))
+  )
